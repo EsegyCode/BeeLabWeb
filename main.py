@@ -11,17 +11,11 @@ from core.weather import get_weather
 from core.exports import generate_excel_report, generate_pdf_report
 
 from config import Config
+from routes.analytics import analytics_bp # Імпортуємо наш новий блок
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = "bee_secret_key_123"
-
-    # Конфігурація бази даних
-    local_url = "mysql+pymysql://root:admin_password@127.0.0.1:3308/beekeeping_db"
-    docker_url = os.getenv('DATABASE_URL')
-    app.config['SQLALCHEMY_DATABASE_URI'] = docker_url if docker_url else local_url
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+    app.config.from_object(Config)
     db.init_app(app)
 
     # Налаштування Login Manager
