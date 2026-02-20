@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -30,7 +31,7 @@
                             <td><strong>#{{ task.hive.hive_number }}</strong> ({{ task.hive.bee_species }})</td>
                             <td>{{ task.task_type }}</td>
                             <td class="text-center">
-                                <form action="{{ url_for('complete_task', task_id=task.id) }}" method="POST" style="display:inline;">
+                                <form action="{{ url_for('hives.complete_task', task_id=task.id) }}" method="POST" style="display:inline;">
                                     <button type="submit" class="btn btn-sm btn-success shadow-sm px-3">✅ Готово</button>
                                 </form>
                             </td>

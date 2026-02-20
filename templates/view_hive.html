@@ -32,6 +32,9 @@
                         <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='harvest') }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-warning">🧺 Медозбір</button>
                         </form>
+                        <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='attention') }}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-warning text-dark">⚠️ Потребує уваги</button>
+                        </form>
                     </div>
 
                     <form method="POST" action="{{ url_for('hives.view_hive', hive_id=hive.id) }}">

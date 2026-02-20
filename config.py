@@ -16,3 +16,5 @@ class Config:
     # Налаштування API погоди
     WEATHER_API_KEY = os.getenv('WEATHER_API_KEY')
     WEATHER_CITY = "Sumy"
+
+    SCHEDULER_API_ENABLED = True
