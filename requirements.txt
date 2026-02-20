@@ -1,0 +1,21 @@
+# Основний фреймворк та розширення
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+
+# Робота з базою даних MySQL
+PyMySQL==1.1.0
+cryptography==42.0.2
+
+# Робота з файлами (Excel та PDF)
+pandas==2.2.0
+openpyxl==3.1.2
+xlsxwriter==3.1.9
+fpdf2==2.7.7
+
+# Безпека та конфігурація
+python-dotenv==1.0.1
+Werkzeug==3.0.1
+
+# Зовнішні запити (Погода)
+requests==2.31.0
