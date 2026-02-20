@@ -23,26 +23,27 @@
 
                     <h6 class="fw-bold">Швидкі дії:</h6>
                     <div class="d-grid gap-2 d-md-block mb-4">
-                        <form action="{{ url_for('quick_action', hive_id=hive.id, action='feeding') }}" method="POST" class="d-inline">
+                        <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='feeding') }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-primary">🍯 Підкормлено</button>
                         </form>
-                        <form action="{{ url_for('quick_action', hive_id=hive.id, action='mite_plate') }}" method="POST" class="d-inline">
+                        <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='mite_plate') }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-danger">💊 Пластина</button>
                         </form>
-                        <form action="{{ url_for('quick_action', hive_id=hive.id, action='harvest') }}" method="POST" class="d-inline">
+                        <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='harvest') }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-warning">🧺 Медозбір</button>
                         </form>
                     </div>
 
-                    <form method="POST">
+                    <form method="POST" action="{{ url_for('hives.view_hive', hive_id=hive.id) }}">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Рівень меду:</label>
                             <select name="honey_level" class="form-select">
-                                <option value="Немає" {% if hive.honey_level == 'Немає' %}selected{% endif %}>Немає</option>
-                                <option value="Майже немає" {% if hive.honey_level == 'Майже немає' %}selected{% endif %}>Майже немає</option>
-                                <option value="Середньо" {% if hive.honey_level == 'Середньо' %}selected{% endif %}>Середньо</option>
-                                <option value="Велика кількість" {% if hive.honey_level == 'Велика кількість' %}selected{% endif %}>Велика кількість</option>
-                                <option value="Повний вулик" {% if hive.honey_level == 'Повний вулик' %}selected{% endif %}>Повний вулик</option>
+                                {% set levels = ["Немає", "Майже немає", "Середньо", "Велика кількість", "Повний вулик"] %}
+                                 {% for level in levels %}
+                                      <option value="{{ level }}" {% if hive.honey_level == level %}selected{% endif %}>
+                                               {{ level }}
+                                     </option>
+                                 {% endfor %}
                             </select>
                         </div>
 
@@ -60,7 +61,7 @@
                     </form>
                 </div>
             </div>
-            <a href="/" class="btn btn-link w-100 text-secondary">← Повернутися до списку</a>
+            <a href="{{ url_for('hives.index') }}" class="btn btn-link w-100 text-secondary">← Повернутися до списку</a>
         </div>
 
         <div class="col-md-7">
@@ -74,6 +75,10 @@
                     </div>
                     <p class="mb-0 mt-1">{{ insp.condition_description }}</p>
                     {% if insp.has_queen_cells %}<small class="text-danger fw-bold">(!) Виявлено маточники</small>{% endif %}
+                </div>
+                {% else %}
+                <div class="list-group-item text-center text-muted">
+                    Історія оглядів порожня
                 </div>
                 {% endfor %}
             </div>

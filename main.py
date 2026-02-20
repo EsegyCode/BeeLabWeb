@@ -2,14 +2,10 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from datetime import date, timedelta
-
-# Імпортуємо нашу базу та моделі
 from models import db, User, Hives, HiveInspection, FutureTask
-# Імпортуємо логіку, яку ми винесли в окремі модулі
 from importer import import_hives_from_excel
 from core.weather import get_weather
 from core.exports import generate_excel_report, generate_pdf_report
-
 from config import Config
 from routes.analytics import analytics_bp # Імпортуємо наш новий блок
 
@@ -22,6 +18,8 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = 'login'
     login_manager.init_app(app)
+
+    app.register_blueprint(analytics_bp)
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -101,51 +99,6 @@ def create_app():
 
             inspections = HiveInspection.query.filter_by(hive_id=hive_id).order_by(HiveInspection.id.desc()).all()
             return render_template('view_hive.html', hive=hive, inspections=inspections, today=date.today())
-
-        # --- ЕКСПОРТ ДАНИХ ---
-        @app.route('/export/excel')
-        @login_required
-        def export_excel():
-            hives = Hives.query.filter_by(user_id=current_user.id).all()
-            output = generate_excel_report(hives)
-            return send_file(output, download_name=f"BeeLab_{date.today()}.xlsx", as_attachment=True)
-
-        @app.route('/export/pdf')
-        @login_required
-        def export_pdf():
-            # 1. Збір даних
-            hives = Hives.query.filter_by(user_id=current_user.id).all()
-            font_path = os.path.join(app.root_path, 'static', 'fonts', 'DejaVuSans.ttf')
-
-            # 2. Виклик зовнішньої логіки (мозок операції)
-            pdf_file = generate_pdf_report(hives, current_user.full_name, font_path)
-
-            # 3. Відправка результату
-            return send_file(
-                pdf_file,
-                download_name=f"BeeLab_Report_{date.today()}.pdf",
-                as_attachment=True,
-                mimetype='application/pdf'
-            )
-
-        # --- АНАЛІТИКА ТА ІМПОРТ ---
-        @app.route('/analytics', methods=['GET', 'POST'])
-        @login_required
-        def analytics():
-            if request.method == 'POST':
-                file = request.files.get('file')
-                if file:
-                    success, msg = import_hives_from_excel(file, current_user.id)
-                    flash(msg, "success" if success else "danger")
-
-            stats = {
-                "total": Hives.query.filter_by(user_id=current_user.id).count(),
-                "attention": Hives.query.filter_by(user_id=current_user.id).filter(
-                    Hives.current_status.like('%уваги%')).count(),
-                "critical": Hives.query.filter_by(user_id=current_user.id).filter(
-                    Hives.current_status.like('%МАТОЧНИКИ%')).count()
-            }
-            return render_template('analytics.html', stats=stats)
 
         @app.route('/hive/<int:hive_id>/quick_action/<action>', methods=['POST'])
         @login_required
