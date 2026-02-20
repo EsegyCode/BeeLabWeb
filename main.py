@@ -10,6 +10,7 @@ from importer import import_hives_from_excel
 from core.weather import get_weather
 from core.exports import generate_excel_report, generate_pdf_report
 
+from config import Config
 
 def create_app():
     app = Flask(__name__)
@@ -70,8 +71,7 @@ def create_app():
         @app.route('/')
         @login_required
         def index():
-            api_key = "ТВІЙ_API_KEY"
-            temp = get_weather(current_user.city, api_key)
+            temp = get_weather(current_user.city, "86e44870c51f3c1e84810cc34f209a05")
             hives = Hives.query.filter_by(user_id=current_user.id).all()
 
             stats = {
@@ -113,19 +113,22 @@ def create_app():
         @login_required
         def export_excel():
             hives = Hives.query.filter_by(user_id=current_user.id).all()
-            return generate_excel_report(hives, current_user.full_name)
+            output = generate_excel_report(hives)
+            return send_file(output, download_name=f"BeeLab_{date.today()}.xlsx", as_attachment=True)
 
         @app.route('/export/pdf')
         @login_required
         def export_pdf():
+            # 1. Збір даних
             hives = Hives.query.filter_by(user_id=current_user.id).all()
             font_path = os.path.join(app.root_path, 'static', 'fonts', 'DejaVuSans.ttf')
 
-            # Викликаємо функцію
-            pdf_output = generate_pdf_report(hives, current_user.full_name, font_path)
+            # 2. Виклик зовнішньої логіки (мозок операції)
+            pdf_file = generate_pdf_report(hives, current_user.full_name, font_path)
 
+            # 3. Відправка результату
             return send_file(
-                pdf_output,
+                pdf_file,
                 download_name=f"BeeLab_Report_{date.today()}.pdf",
                 as_attachment=True,
                 mimetype='application/pdf'
