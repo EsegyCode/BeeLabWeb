@@ -1,50 +1,61 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, Date
-from datetime import date, datetime
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
 
 db = SQLAlchemy()
 
 
-class Hives(db.Model):  # Змінено Base на db.Model для роботи з Flask-SQLAlchemy
-    __tablename__ = 'hives'
-    id = Column(Integer, primary_key=True)
-    hive_number = Column(Integer, unique=True, nullable=False)
-    install_date = db.Column(db.Date)  # Дата встановлення вулика
-    bee_species = Column(String(30))
-    current_status = Column(Text)
+class User(db.Model, UserMixin):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    full_name = db.Column(db.String(100))
+    city = db.Column(db.String(50), default="Sumy")  # Для персоналізованої погоди
+
+    # Зв'язок: один користувач -> багато вуликів
+    hives = db.relationship('Hives', backref='owner', lazy=True, cascade="all, delete-orphan")
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
+class Hives(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hive_number = db.Column(db.String(20), nullable=False)
+    bee_species = db.Column(db.String(50))
     queen_year = db.Column(db.Integer)
+    install_date = db.Column(db.Date, default=date.today)
+    current_status = db.Column(db.String(200), default="все добре")
+    honey_level = db.Column(db.String(50), default="Немає")
 
-    # Relations
-    inspections = db.relationship('HiveInspection', backref='hive', lazy=True, cascade='all, delete-orphan')
-    future_tasks = db.relationship('FutureTask', backref='hive', lazy=True, cascade='all, delete-orphan')
+    # Нове поле: прив'язка до користувача
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    def __repr__(self):
-        return f'<Hives {self.hive_number}>'
+    last_feeding_date = db.Column(db.Date)
+    mite_plate_date = db.Column(db.Date)
+    is_first_inspection_done = db.Column(db.Boolean, default=False)
 
-
-class HiveInspection(db.Model):  # Змінено на db.Model
-    __tablename__ = 'inspections'
-
-    id = Column(Integer, primary_key=True)
-    # Вказуй 'hives.id' (таблиця.стовпець), а не просто назву таблиці
-    hive_id = Column(Integer, ForeignKey('hives.id'), nullable=False)
-
-    # Виправлено помилку в utcnow та прибрано дужки ()
-    inspection_date = Column(Date, nullable=False, default=date.today)
-    condition_description = Column(Text)
-    last_works = Column(Text)
-
-    # Логіка для моделі
-    has_queen_cells = Column(Boolean, default=False, nullable=False)
-    has_honey = Column(Boolean, default=True)
+    inspections = db.relationship('HiveInspection', backref='hive', lazy=True, cascade="all, delete-orphan")
+    tasks = db.relationship('FutureTask', backref='hive', lazy=True, cascade="all, delete-orphan")
 
 
-class FutureTask(db.Model):  # Змінено на db.Model
-    __tablename__ = 'future_tasks'
+class HiveInspection(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hive_id = db.Column(db.Integer, db.ForeignKey('hives.id'), nullable=False)
+    inspection_date = db.Column(db.Date, default=date.today)
+    condition_description = db.Column(db.Text)
+    has_queen_cells = db.Column(db.Boolean, default=False)
+    inspection_honey_level = db.Column(db.String(50))
 
-    # Прибрано AUTO_INCREMENT (він іде автоматично з primary_key)
-    id = Column(Integer, primary_key=True)
-    hive_id = Column(Integer, ForeignKey('hives.id'), nullable=False)
-    planned_date = Column(Date, nullable=False)
-    task_type = Column(String(30), nullable=False)
-    is_completed = Column(Boolean, default=False, nullable=False)
+
+class FutureTask(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hive_id = db.Column(db.Integer, db.ForeignKey('hives.id'), nullable=False)
+    planned_date = db.Column(db.Date, nullable=False)
+    task_type = db.Column(db.String(100))
+    is_completed = db.Column(db.Boolean, default=False)

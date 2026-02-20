@@ -1,37 +1,63 @@
 import pandas as pd
-from models import Hives, db
+from models import db, Hives
+from datetime import date
 
 
-def import_hives_from_excel(file_storage):
+def import_hives_from_excel(file, user_id):
+    """
+    Імпортує вулики з Excel файлу.
+    Якщо рік матки порожній, встановлює поточний рік.
+    Прив'язує кожен вулик до конкретного користувача.
+    """
     try:
-        df = pd.read_excel(file_storage)
+        # Читаємо файл Excel
+        df = pd.read_excel(file)
 
-        # Оновлюємо перевірку необхідних колонок
-        required_columns = ['Номер', 'Порода', 'Рік матки']
-        if not all(col in df.columns for col in required_columns):
-            return False, "У файлі мають бути колонки: Номер, Порода, Рік матки"
+        # Перевірка наявності обов'язкових колонок
+        required_columns = ['hive_number', 'bee_species', 'queen_year']
+        for col in required_columns:
+            if col not in df.columns:
+                return False, f"Помилка: У файлі відсутня колонка '{col}'"
 
-        added_count = 0
-        skipped_count = 0
+        count = 0
+        current_year = date.today().year
 
         for _, row in df.iterrows():
-            hive_num = int(row['Номер'])
-            exists = Hives.query.filter_by(hive_number=hive_num).first()
+            # Отримуємо номер вулика як рядок
+            h_number = str(row['hive_number']).strip()
 
-            if not exists:
-                new_hive = Hives(
-                    hive_number=hive_num,
-                    bee_species=str(row['Порода']),
-                    queen_year=int(row['Рік матки']),  # Записуємо рік матки
-                    current_status='все добре'
-                )
-                db.session.add(new_hive)
-                added_count += 1
+            # Перевіряємо, чи не існує вже такий вулик у цього користувача
+            existing_hive = Hives.query.filter_by(hive_number=h_number, user_id=user_id).first()
+            if existing_hive:
+                continue
+
+            # Логіка року матки: якщо порожньо (NaN), ставимо поточний рік
+            q_year = row['queen_year']
+            if pd.isna(q_year) or q_year == "":
+                q_year = current_year
             else:
-                skipped_count += 1
+                try:
+                    q_year = int(q_year)
+                except (ValueError, TypeError):
+                    q_year = current_year
+
+            # Створюємо новий запис вулика
+            new_hive = Hives(
+                hive_number=h_number,
+                bee_species=str(row['bee_species']) if pd.notnull(row['bee_species']) else "Не вказано",
+                queen_year=q_year,
+                user_id=user_id,  # Обов'язкова прив'язка до акаунта
+                current_status="Імпортовано (все добре)",
+                honey_level="Немає",
+                is_first_inspection_done=False
+            )
+
+            db.session.add(new_hive)
+            count += 1
 
         db.session.commit()
-        return True, f"Додано: {added_count}, пропущено: {skipped_count}."
+        return True, f"Успішно додано {count} нових вуликів!"
+
     except Exception as e:
         db.session.rollback()
-        return False, f"Помилка: {str(e)}"
+        return False, f"Критична помилка при імпорті: {str(e)}"

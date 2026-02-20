@@ -6,32 +6,38 @@
 
     <div class="row">
         <div class="col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-success text-white">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-header bg-success text-white py-3">
                     <h5 class="mb-0">📥 Імпорт бази вуликів (Excel)</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted small">Завантажте файл .xlsx або .xls. Колонки повинні мати назви: <strong>Номер</strong> та <strong>Порода</strong>.</p>
+                    <p class="text-muted small">
+                        Завантажте файл .xlsx або .xls. <br>
+                        Обов'язкові колонки: <strong>hive_number</strong>, <strong>bee_species</strong>, <strong>queen_year</strong>.
+                    </p>
                     <form action="/analytics" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <input class="form-control" type="file" name="file" accept=".xlsx, .xls" required>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">Завантажити та оновити базу</button>
+                        <button type="submit" class="btn btn-success w-100 fw-bold">Завантажити та оновити базу</button>
                     </form>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">📋 Звіти та Експорт</h5>
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0">📋 Звіти та Резервні копії</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted small">Згенеруйте PDF-звіт про стан всієї пасіки та план робіт на найближчий тиждень.</p>
+                    <p class="text-muted small">Збережіть дані про пасіку та журнал оглядів у зручному форматі для аналізу або друку.</p>
                     <div class="d-grid gap-2">
-                        <a href="/export/pdf" class="btn btn-outline-danger">
-                            📄 Сформувати PDF звіт
+                        <a href="/export/pdf" class="btn btn-outline-danger d-flex align-items-center justify-content-center">
+                            <span class="me-2">📄</span> Сформувати PDF звіт
+                        </a>
+                        <a href="/export/excel" class="btn btn-outline-success d-flex align-items-center justify-content-center">
+                            <span class="me-2"> Excel</span> Вивантажити всі дані (.xlsx)
                         </a>
                         <button class="btn btn-outline-secondary" disabled>
                             📈 Графіки продуктивності (в розробці)
@@ -44,26 +50,27 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
                     <h5 class="mb-0">📈 Показники ефективності</h5>
                 </div>
                 <div class="card-body">
                     <div class="row text-center">
-                        <div class="col-md-3">
-                            <h6 class="text-muted">Активних вуликів</h6>
-                            <p class="h3">{{ stats.total }}</p>
+                        <div class="col-md-3 border-end">
+                            <h6 class="text-muted small uppercase">Активних вуликів</h6>
+                            <p class="h3 fw-bold text-dark">{{ stats.total }}</p>
                         </div>
-                        <div class="col-md-3">
-                            <h6 class="text-muted">Оглядів за місяць</h6>
-                            <p class="h3">0</p> </div>
-                        <div class="col-md-3 text-warning">
-                            <h6>Потрібен огляд</h6>
-                            <p class="h3">{{ stats.attention }}</p>
+                        <div class="col-md-3 border-end">
+                            <h6 class="text-muted small uppercase">Оглядів за місяць</h6>
+                            <p class="h3 fw-bold text-dark">0</p>
+                        </div>
+                        <div class="col-md-3 border-end text-warning">
+                            <h6 class="small uppercase">Потрібен огляд</h6>
+                            <p class="h3 fw-bold">{{ stats.attention }}</p>
                         </div>
                         <div class="col-md-3 text-danger">
-                            <h6>Критичний стан</h6>
-                            <p class="h3">{{ stats.critical }}</p>
+                            <h6 class="small uppercase">Критичний стан</h6>
+                            <p class="h3 fw-bold">{{ stats.critical }}</p>
                         </div>
                     </div>
                 </div>
