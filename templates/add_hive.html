@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Реєстрація нового вулика</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Номер вулика</label>
+                        <input type="number" name="hive_number" class="form-control" required placeholder="Наприклад: 101">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Порода бджіл</label>
+                        <select name="bee_species" class="form-select">
+                            <option value="Карпатка">Карпатка</option>
+                            <option value="Бакфаст">Бакфаст</option>
+                            <option value="Українська степова">Українська степова</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Зберегти у базу</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
