@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(255), nullable=False)
     full_name = db.Column(db.String(100))
     contact_info = db.Column(db.String(100))  # Твій номер або пошта на випадок втрати
+    telegram_id = db.Column(db.String(20), unique=True, nullable=True)
     city = db.Column(db.String(50), default="Sumy")  # Для персоналізованої погоди
 
     # Зв'язок: один користувач -> багато вуликів
