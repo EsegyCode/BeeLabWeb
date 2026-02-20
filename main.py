@@ -1,177 +1,38 @@
-import os
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from datetime import date, timedelta
-from models import db, User, Hives, HiveInspection, FutureTask
-from importer import import_hives_from_excel
-from core.weather import get_weather
-from core.exports import generate_excel_report, generate_pdf_report
+from flask import Flask
+from flask_login import LoginManager
+from models import db, User
 from config import Config
-from routes.analytics import analytics_bp # Імпортуємо наш новий блок
+
+#Blueprints
+from routes.auth import auth_bp
+from routes.hives import hives_bp
+from routes.analytics import analytics_bp
+
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
     db.init_app(app)
 
-    # Налаштування Login Manager
     login_manager = LoginManager()
-    login_manager.login_view = 'login'
+    login_manager.login_view = 'auth.login'  # Префікс Blueprint
     login_manager.init_app(app)
-
-    app.register_blueprint(analytics_bp)
 
     @login_manager.user_loader
     def load_user(user_id):
         return db.session.get(User, int(user_id))
 
+    # РЕЄСТРАЦІЯ
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(hives_bp)
+    app.register_blueprint(analytics_bp)
+
     with app.app_context():
         db.create_all()
 
-        # --- МАРШРУТИ АВТЕНТИФІКАЦІЇ ---
-        @app.route('/login', methods=['GET', 'POST'])
-        def login():
-            if request.method == 'POST':
-                user = User.query.filter_by(email=request.form.get('email')).first()
-                if user and user.check_password(request.form.get('password')):
-                    login_user(user)
-                    return redirect(url_for('index'))
-                flash('Невірний email або пароль!', 'danger')
-            return render_template('login.html')
+    return app
 
-        @app.route('/register', methods=['GET', 'POST'])
-        def register():
-            if request.method == 'POST':
-                if User.query.filter_by(email=request.form.get('email')).first():
-                    flash('Цей Email вже зареєстровано!', 'warning')
-                    return redirect(url_for('register'))
-                u = User(email=request.form.get('email'), full_name=request.form.get('name'))
-                u.set_password(request.form.get('password'))
-                db.session.add(u)
-                db.session.commit()
-                flash('Реєстрація успішна!', 'success')
-                return redirect(url_for('login'))
-            return render_template('register.html')
-
-        @app.route('/logout')
-        @login_required
-        def logout():
-            logout_user()
-            return redirect(url_for('login'))
-
-        # --- ОСНОВНІ МАРШРУТИ ПАСІКИ ---
-        @app.route('/')
-        @login_required
-        def index():
-            temp = get_weather(current_user.city, "86e44870c51f3c1e84810cc34f209a05")
-            hives = Hives.query.filter_by(user_id=current_user.id).all()
-
-            stats = {
-                "total": len(hives),
-                "critical": Hives.query.filter_by(user_id=current_user.id).filter(
-                    Hives.current_status.like('%МАТОЧНИКИ%')).count(),
-                "attention": Hives.query.filter_by(user_id=current_user.id).filter(
-                    Hives.current_status.like('%уваги%')).count()
-            }
-            return render_template('index.html', hives=hives, stats=stats, temp=temp)
-
-        @app.route('/hive/<int:hive_id>', methods=['GET', 'POST'])
-        @login_required
-        def view_hive(hive_id):
-            hive = db.session.get(Hives, hive_id)
-            if not hive or hive.user_id != current_user.id:
-                return "Вулик не знайдено", 404
-
-            if request.method == 'POST':
-                has_qc = 'has_queen_cells' in request.form
-                hive.honey_level = request.form.get('honey_level')
-                hive.current_status = "⚠️ МАТОЧНИКИ" if has_qc else "🟢 Оглянуто"
-
-                insp = HiveInspection(
-                    hive_id=hive.id,
-                    condition_description=request.form.get('condition'),
-                    has_queen_cells=has_qc,
-                    inspection_honey_level=hive.honey_level
-                )
-                db.session.add(insp)
-                db.session.commit()
-                return redirect(url_for('index'))
-
-            inspections = HiveInspection.query.filter_by(hive_id=hive_id).order_by(HiveInspection.id.desc()).all()
-            return render_template('view_hive.html', hive=hive, inspections=inspections, today=date.today())
-
-        @app.route('/hive/<int:hive_id>/quick_action/<action>', methods=['POST'])
-        @login_required
-        def quick_action(hive_id, action):
-            hive = db.session.get(Hives, hive_id)
-            if not hive or hive.user_id != current_user.id:
-                return "Помилка доступу", 403
-
-            today = date.today()
-            if action == 'feeding':
-                hive.current_status = "🟢 Підкормлено"
-                db.session.add(
-                    FutureTask(hive_id=hive.id, planned_date=today + timedelta(days=4), task_type="Перевірка корму"))
-            elif action == 'mite_plate':
-                hive.current_status = "🟢 Пластини встановлено"
-                db.session.add(
-                    FutureTask(hive_id=hive.id, planned_date=today + timedelta(days=21), task_type="Зняти пластини"))
-
-            db.session.commit()
-            return redirect(url_for('view_hive', hive_id=hive.id))
-
-        # --- КАЛЕНДАР ТА ЗАВДАННЯ ---
-        @app.route('/calendar')
-        @login_required
-        def calendar():
-            tasks = FutureTask.query.join(Hives).filter(Hives.user_id == current_user.id,
-                                                        FutureTask.is_completed == False).all()
-            return render_template('calendar.html', tasks=tasks, today=date.today())
-
-        @app.route('/task/complete/<int:task_id>', methods=['POST'])
-        @login_required
-        def complete_task(task_id):
-            task = db.session.get(FutureTask, task_id)
-            if task and task.hive.user_id == current_user.id:
-                task.is_completed = True
-                db.session.commit()
-                flash("Завдання виконано!", "success")
-            else:
-                flash("Помилка: завдання не знайдено", "danger")
-            return redirect(url_for('calendar'))
-
-        @app.route('/add_hive', methods=['GET', 'POST'])
-        @login_required
-        def add_hive():
-            if request.method == 'POST':
-                # Отримуємо дані з форми
-                h_number = request.form.get('hive_number')
-                species = request.form.get('bee_species')
-                q_year = request.form.get('queen_year')
-
-                # Якщо рік не вказано, ставимо поточний (як ми домовлялися)
-                if not q_year or q_year.strip() == "":
-                    q_year = date.today().year
-                else:
-                    q_year = int(q_year)
-
-                new_hive = Hives(
-                    hive_number=h_number,
-                    bee_species=species,
-                    queen_year=q_year,
-                    user_id=current_user.id,  # Прив'язка до поточного юзера
-                    current_status="все добре",
-                    honey_level="Немає"
-                )
-
-                db.session.add(new_hive)
-                db.session.commit()
-                flash(f"Вулик №{h_number} успішно додано!", "success")
-                return redirect(url_for('index'))
-
-            return render_template('add_hive.html', now_date=date.today().strftime('%Y-%m-%d'))
-
-        return app
 
 if __name__ == "__main__":
     app = create_app()
