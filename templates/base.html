@@ -25,7 +25,6 @@
             color: #333;
         }
 
-        /* Навігація */
         .navbar {
             background-color: var(--bee-dark) !important;
             border-bottom: 3px solid var(--bee-yellow);
@@ -52,7 +51,6 @@
             transform: translateY(-2px);
         }
 
-        /* Бейдж користувача */
         .user-badge {
             border: 1.5px solid var(--bee-yellow);
             background: rgba(255, 193, 7, 0.05);
@@ -61,11 +59,12 @@
             padding: 0.5rem 1rem;
             border-radius: 50px;
             transition: all 0.3s;
+            text-decoration: none;
         }
 
         .user-badge:hover {
             background: var(--bee-yellow);
-            color: var(--bee-dark);
+            color: var(--bee-dark) !important;
         }
 
         .btn-add-hive {
@@ -81,6 +80,7 @@
             background-color: var(--bee-accent);
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            color: var(--bee-dark);
         }
 
         .main-container {
@@ -88,13 +88,11 @@
             padding-top: 20px;
         }
 
-        /* Сповіщення */
         .alert {
             border-radius: 12px;
             font-weight: 500;
         }
 
-        /* Футер */
         footer {
             background-color: var(--bee-dark);
             border-top: 1px solid #333;
@@ -106,6 +104,14 @@
             padding: 8px 15px;
             border-radius: 10px;
             display: inline-block;
+        }
+
+        .dropdown-menu {
+            border-top: 3px solid var(--bee-yellow) !important;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(255, 193, 7, 0.1);
         }
     </style>
 </head>
@@ -127,18 +133,27 @@
                         <a class="nav-link" href="{{ url_for('hives.calendar') }}"><i class="fas fa-calendar-alt me-1"></i> Календар</a>
                         <a class="nav-link" href="{{ url_for('analytics.analytics') }}"><i class="fas fa-chart-line me-1"></i> Аналітика</a>
 
-                        <div class="nav-item mx-lg-3 my-2 my-lg-0">
-                            <span class="user-badge d-inline-block">
+                        <div class="nav-item dropdown mx-lg-3 my-2 my-lg-0">
+                            <a class="nav-link dropdown-toggle user-badge d-inline-block px-3" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--bee-yellow) !important;">
                                 <i class="fas fa-user-circle me-1"></i> {{ current_user.username }}
-                            </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 bg-dark" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item text-white py-2" href="{{ url_for('auth.profile') }}">
+                                        <i class="fas fa-cog me-2 text-warning"></i> Налаштування
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider bg-secondary"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger py-2" href="{{ url_for('auth.logout') }}">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Вихід
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
 
-                        <a class="nav-link text-danger fw-bold" href="{{ url_for('auth.logout') }}">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </a>
-
                         <div class="ms-lg-2">
-                            <a class="btn btn-add-hive px-4" href="{{ url_for('hives.add_hive') }}">
+                            <a class="btn btn-add-hive btn-sm px-4 py-2" href="{{ url_for('hives.add_hive') }}">
                                 <i class="fas fa-plus me-1"></i> Вулик
                             </a>
                         </div>

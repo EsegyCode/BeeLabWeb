@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash
 from models import db, User
 
@@ -50,3 +50,14 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+@auth_bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        current_user.telegram_id = request.form.get('telegram_id')
+        current_user.city = request.form.get('city')
+        db.session.commit()
+        flash('Профіль успішно оновлено!', 'success')
+        return redirect(url_for('auth.profile'))
+    return render_template('profile.html')
