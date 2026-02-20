@@ -9,9 +9,8 @@ from datetime import datetime, timedelta
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = "bee_secret_key_123"  # Необхідно для роботи flash-повідомлень
+    app.secret_key = "bee_secret_key_123"
 
-    # Конфігурація підключення
     local_url = "mysql+pymysql://root:admin_password@127.0.0.1:3308/beekeeping_db"
     docker_url = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_DATABASE_URI'] = docker_url if docker_url else local_url
@@ -30,61 +29,117 @@ def create_app():
 
     @app.route('/')
     def index():
-        hives = Hives.query.all()
-        # Рахуємо реальну статистику за статусами для головного екрану
+        filter_type = request.args.get('filter')
+
+        # Логіка фільтрації списку
+        if filter_type == 'attention':
+            hives = Hives.query.filter(Hives.current_status.like('%уваги%')).all()
+        elif filter_type == 'critical':
+            hives = Hives.query.filter(Hives.current_status.like('%МАТОЧНИКИ%')).all()
+        else:
+            hives = Hives.query.all()
+
+        # Статистика (завжди по всій базі)
         stats = {
-            "total": len(hives),
-            "critical": Hives.query.filter(Hives.current_status.like('%маточники%')).count(),
+            "total": Hives.query.count(),
+            "critical": Hives.query.filter(Hives.current_status.like('%МАТОЧНИКИ%')).count(),
             "attention": Hives.query.filter(Hives.current_status.like('%уваги%')).count()
         }
-        return render_template('index.html', hives=hives, stats=stats)
+        return render_template('index.html', hives=hives, stats=stats, active_filter=filter_type)
 
     @app.route('/add_hive', methods=['GET', 'POST'])
     def add_hive():
         if request.method == 'POST':
             number = request.form.get('hive_number')
             species = request.form.get('bee_species')
-            new_hive = Hives(hive_number=number, bee_species=species, current_status='все добре')
-            db.session.add(new_hive)
-            db.session.commit()
-            return redirect(url_for('index'))
-        return render_template('add_hive.html')
+            q_year = int(request.form.get('queen_year')) if request.form.get('queen_year') else None
+            i_date = request.form.get('install_date')
 
-    @app.route('/analytics', methods=['GET', 'POST'])
-    def analytics():
-        if request.method == 'POST':
-            file = request.files.get('file')
-            if file:
-                # Використовуємо твій новий модуль importer.py
-                success, message = import_hives_from_excel(file)
-                if success:
-                    flash(message, "success")
-                    return redirect(url_for('index'))
-                else:
-                    flash(message, "danger")
+            has_qc = 'has_queen_cells' in request.form
 
-        # Статистика для сторінки аналітики
-        hives_count = Hives.query.count()
-        stats = {
-            "total": hives_count,
-            "critical": Hives.query.filter(Hives.current_status.like('%маточники%')).count(),
-            "attention": Hives.query.filter(Hives.current_status.like('%уваги%')).count()
-        }
-        return render_template('analytics.html', stats=stats)
+            # Розумний статус при додаванні
+            if has_qc:
+                status = "⚠️ МАТОЧНИКИ (контроль!)"
+            elif q_year and q_year <= (datetime.now().year - 3):
+                status = "🟡 Потребує уваги (стара матка)"
+            else:
+                status = "все добре"
+
+            try:
+                new_hive = Hives(
+                    hive_number=number,
+                    bee_species=species,
+                    queen_year=q_year,
+                    install_date=datetime.strptime(i_date, '%Y-%m-%d').date() if i_date else datetime.now().date(),
+                    current_status=status
+                )
+                db.session.add(new_hive)
+                db.session.commit()
+                flash(f"Вулик №{number} зареєстровано!", "success")
+                return redirect(url_for('index'))
+            except Exception as e:
+                db.session.rollback()
+                flash(f"Помилка: {str(e)}", "danger")
+
+        today = datetime.now().strftime('%Y-%m-%d')
+        return render_template('add_hive.html', now_date=today)
 
     @app.route('/hive/<int:hive_id>', methods=['GET', 'POST'])
     def view_hive(hive_id):
         hive = Hives.query.get_or_404(hive_id)
-
         if request.method == 'POST':
             has_queen_cells = 'has_queen_cells' in request.form
-            condition = request.form.get('condition')
+            condition = request.form.get('condition', '')
 
-            # 1. Створюємо запис про огляд
-            inspection = HiveInspection(
+            new_inspection = HiveInspection(
                 hive_id=hive.id,
+                inspection_date=datetime.now(),
                 condition_description=condition,
                 has_queen_cells=has_queen_cells
             )
 
-            # 2. Логіка планування: маточники = 3 дні, норма
+            # Логіка статусів та дат
+            if has_queen_cells:
+                hive.current_status = "⚠️ МАТОЧНИКИ (контроль!)"
+                days = 3
+            elif hive.queen_year and int(hive.queen_year) <= (datetime.now().year - 3):
+                hive.current_status = "🟡 Потребує уваги (стара матка)"
+                days = 10
+            elif "слаб" in condition.lower() or "хвор" in condition.lower():
+                hive.current_status = "🟡 Потребує уваги (стан сім'ї)"
+                days = 7
+            else:
+                hive.current_status = "все добре"
+                days = 10
+
+            next_date = datetime.now() + timedelta(days=days)
+            new_task = FutureTask(
+                hive_id=hive.id,
+                planned_date=next_date,
+                task_type=hive.current_status,
+                is_completed=False
+            )
+
+            db.session.add(new_inspection)
+            db.session.add(new_task)
+            db.session.commit()
+            flash(f"Огляд збережено. Наступний візит: {next_date.strftime('%d.%m')}", "success")
+            return redirect(url_for('index'))
+
+        inspections = HiveInspection.query.filter_by(hive_id=hive_id).order_by(HiveInspection.id.desc()).all()
+        return render_template('view_hive.html', hive=hive, inspections=inspections)
+
+    @app.route('/hive/<int:hive_id>/quick_attention', methods=['POST'])
+    def quick_attention(hive_id):
+        hive = Hives.query.get_or_404(hive_id)
+        hive.current_status = "🟡 Потребує уваги (встановлено вручну)"
+        db.session.commit()
+        flash(f"Вулик №{hive.hive_number} позначено для уваги!", "warning")
+        return redirect(url_for('index'))
+
+    return app
+
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True, port=5000)

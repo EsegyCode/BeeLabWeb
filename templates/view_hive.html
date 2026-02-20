@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-5 mb-4">
+            <div class="card shadow border-0 overflow-hidden">
+                <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">🐝 Вулик №{{ hive.hive_number }}</h4>
+                    <form action="{{ url_for('quick_attention', hive_id=hive.id) }}" method="POST" class="m-0">
+                        <button type="submit" class="btn btn-sm btn-warning fw-bold shadow-sm">⚠️ В УВАГУ</button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center mb-3">
+                        <div class="col-6 border-end">
+                            <small class="text-muted d-block">Порода</small>
+                            <span class="fw-bold">{{ hive.bee_species }}</span>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Рік матки</small>
+                            <span class="fw-bold {% if hive.queen_year and hive.queen_year <= 2023 %}text-danger{% endif %}">
+                                {{ hive.queen_year or '—' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Опис огляду</label>
+                            <textarea name="condition" class="form-control" rows="4" placeholder="Що бачимо в гнізді?"></textarea>
+                        </div>
+
+                        <div class="card bg-light border-danger mb-3">
+                            <div class="card-body py-2">
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="has_queen_cells" class="form-check-input" id="qc">
+                                    <label class="form-check-label text-danger fw-bold" for="qc">🚨 МАТОЧНИКИ</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Зберегти огляд</button>
+                        <a href="/" class="btn btn-link w-100 mt-2 text-secondary">Повернутися назад</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <h4 class="mb-4">🗓️ Журнал оглядів</h4>
+            <div class="timeline">
+                {% for insp in inspections %}
+                <div class="timeline-item mb-4 border-start border-4 ps-3 {% if insp.has_queen_cells %}border-danger{% else %}border-success{% endif %} bg-white p-3 shadow-sm rounded">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-primary">{{ insp.inspection_date.strftime('%d.%m.%Y') }}</span>
+                        {% if insp.has_queen_cells %}
+                            <span class="badge bg-danger">Ройовий стан</span>
+                        {% endif %}
+                    </div>
+                    <p class="mb-0">{{ insp.condition_description or "Без заміток" }}</p>
+                </div>
+                {% else %}
+                <div class="alert alert-light border text-center py-4">Оглядів ще не було.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .timeline { border-left: 2px solid #e9ecef; margin-left: 10px; }
+    .timeline-item { position: relative; margin-left: 20px; }
+    .timeline-item::before {
+        content: ""; position: absolute; left: -31px; top: 10px;
+        width: 12px; height: 12px; border-radius: 50%;
+        background: white; border: 3px solid #0d6efd;
+    }
+</style>
+{% endblock %}

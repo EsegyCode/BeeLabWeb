@@ -4,73 +4,88 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>📊 Стан пасіки</h2>
-        <a href="/add_hive" class="btn btn-primary">+ Додати вулик</a>
+        <div class="btn-group shadow-sm">
+            <a href="/add_hive" class="btn btn-primary">+ Додати вулик</a>
+            <a href="/analytics" class="btn btn-outline-secondary">📥 Імпорт Excel</a>
+        </div>
     </div>
 
     <div class="row mb-4">
         <div class="col-md-4">
-            <div class="card bg-primary text-white shadow-sm">
+            <div class="card bg-primary text-white shadow-sm border-0">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Всього вуликів</h5>
-                    <p class="display-4 fw-bold">{{ stats.total }}</p>
+                    <h5 class="card-title opacity-75">Всього вуликів</h5>
+                    <p class="display-4 fw-bold mb-0">{{ stats.total }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-warning text-dark shadow-sm">
+            <div class="card bg-warning text-dark shadow-sm border-0">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Потребують уваги</h5>
-                    <p class="display-4 fw-bold">{{ stats.attention }}</p>
+                    <h5 class="card-title opacity-75">Потребують уваги</h5>
+                    <p class="display-4 fw-bold mb-0">{{ stats.attention }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-danger text-white shadow-sm">
+            <div class="card bg-danger text-white shadow-sm border-0">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Проблемні</h5>
-                    <p class="display-4 fw-bold">{{ stats.critical }}</p>
+                    <h5 class="card-title opacity-75">Критичні (Маточники)</h5>
+                    <p class="display-4 fw-bold mb-0">{{ stats.critical }}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0">Список усіх вуликів</h5>
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h5 class="mb-0 fw-bold text-secondary">Реєстр вуликів</h5>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
                             <th class="px-4">№ Вулика</th>
                             <th>Порода</th>
-                            <th>Статус</th>
+                            <th>Рік матки</th>
+                            <th>Поточний статус</th>
                             <th class="text-center">Дії</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for hive in hives %}
                         <tr>
-                            <td class="px-4 fw-bold">#{{ hive.hive_number }}</td>
+                            <td class="px-4 fw-bold text-dark">#{{ hive.hive_number }}</td>
                             <td>{{ hive.bee_species }}</td>
                             <td>
-                                {% if 'проблем' in hive.current_status|lower %}
-                                    <span class="badge bg-danger">🔴 {{ hive.current_status }}</span>
-                                {% elif 'уваги' in hive.current_status|lower %}
-                                    <span class="badge bg-warning text-dark">🟡 {{ hive.current_status }}</span>
-                                {% else %}
-                                    <span class="badge bg-success">🟢 {{ hive.current_status }}</span>
-                                {% endif %}
-                            </td>
+    {{ hive.queen_year if hive.queen_year else '—' }}
+    {# Матка вважається старою, якщо їй 3 роки або більше (2026 - 3 = 2023) #}
+    {% if hive.queen_year and hive.queen_year|int <= 2023 %}
+        <span class="ms-1" title="Матці 3+ роки, заплануйте заміну">⚠️</span>
+    {% endif %}
+</td>
+<td>
+    {% set status = hive.current_status|lower %}
+    {% if 'маточники' in status %}
+        <span class="badge rounded-pill bg-danger px-3">🔴 {{ hive.current_status }}</span>
+    {% elif hive.queen_year and hive.queen_year|int <= 2023 %}
+        <span class="badge rounded-pill bg-warning text-dark px-3">🟡 Потребує заміни матки</span>
+    {% elif 'уваги' in status %}
+        <span class="badge rounded-pill bg-warning text-dark px-3">🟡 {{ hive.current_status }}</span>
+    {% else %}
+        <span class="badge rounded-pill bg-success px-3">🟢 {{ hive.current_status }}</span>
+    {% endif %}
+</td>
                             <td class="text-center">
-                                <a href="/hive/{{ hive.id }}" class="btn btn-sm btn-outline-dark">Деталі</a>
+                                <a href="/hive/{{ hive.id }}" class="btn btn-sm btn-dark px-3 shadow-sm">Огляд</a>
                             </td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="4" class="text-center py-5 text-muted">
-                                База порожня. Додайте перший вулик.
+                            <td colspan="5" class="text-center py-5 text-muted italic">
+                                <div class="mb-2">📭 База даних порожня.</div>
+                                <a href="/analytics" class="btn btn-sm btn-outline-primary">Завантажити дані з Excel</a>
                             </td>
                         </tr>
                         {% endfor %}

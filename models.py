@@ -9,9 +9,10 @@ class Hives(db.Model):  # Змінено Base на db.Model для роботи 
     __tablename__ = 'hives'
     id = Column(Integer, primary_key=True)
     hive_number = Column(Integer, unique=True, nullable=False)
-    date_of_install = Column(Date, default=date.today)  # Використовуй Date з sqlalchemy
+    install_date = db.Column(db.Date)  # Дата встановлення вулика
     bee_species = Column(String(30))
     current_status = Column(Text)
+    queen_year = db.Column(db.Integer)
 
     # Relations
     inspections = db.relationship('HiveInspection', backref='hive', lazy=True, cascade='all, delete-orphan')
