@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+            <i class="fas fa-file-import text-warning fa-2x me-3"></i>
+            <div>
+                <h2 class="mb-0 fw-bold">Інструкція з імпорту вуликів</h2>
+                <p class="text-muted mb-0">Як правильно підготувати Excel-файл, щоб дані завантажилися без помилок</p>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <h5 class="card-title fw-bold text-dark mb-4">
+                    <i class="fas fa-list-ol text-warning me-2"></i>Три простих кроки для імпорту:
+                </h5>
+                
+                <div class="row g-4 text-center">
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <div class="bg-warning text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 40px; height: 40px; font-weight: bold;">1</div>
+                            <h6 class="fw-bold">Скачайте шаблон</h6>
+                            <p class="small text-muted mb-0">Завантажте готовий зразок таблиці на свій комп'ютер.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <div class="bg-warning text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 40px; height: 40px; font-weight: bold;">2</div>
+                            <h6 class="fw-bold">Заповніть дані</h6>
+                            <p class="small text-muted mb-0">Внесіть інформацію про свої вулики, дотримуючись правил.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <div class="bg-warning text-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 40px; height: 40px; font-weight: bold;">3</div>
+                            <h6 class="fw-bold">Завантажте на сайт</h6>
+                            <p class="small text-muted mb-0">Оберіть заповнений файл та натисніть кнопку "Імпортувати".</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white p-3 fw-bold d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-table me-2 text-warning"></i>Вимоги до структури Excel-файлу</span>
+                <a href="#" class="btn btn-sm btn-warning fw-bold">
+                    <i class="fas fa-download me-1"></i> Скачати шаблон .xlsx
+                </a>
+            </div>
+            <div class="card-body p-4">
+                
+                <p class="fw-medium text-secondary">Перший рядок вашої таблиці обов'язково має містити такі заголовки англійською мовою:</p>
+
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" style="min-width: 150px;">hive_number <span class="text-danger">*</span></th>
+                                <th scope="col" style="min-width: 150px;">bee_species</th>
+                                <th scope="col" style="min-width: 120px;">queen_year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge bg-secondary">1</span> або <span class="badge bg-secondary">12-Б</span></td>
+                                <td>Карпатка</td>
+                                <td>2024</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Бакфаст</td>
+                                <td>2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h5 class="fw-bold text-dark mb-3"><i class="fas fa-info-circle text-info me-2"></i>Опис колонок та правила заповнення:</h5>
+                
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item p-3 border-start border-danger border-4 mb-2 bg-light rounded-end">
+                        <strong class="text-dark">hive_number</strong> <span class="badge bg-danger ms-1">Обов'язково</span>
+                        <div class="text-muted small mt-1">Унікальний номер вулика на вашій пасіці. Може містити як цифри, так і літери чи дефіси (наприклад: <code>1</code>, <code>23</code>, <code>4-А</code>). Якщо такий номер уже існує у вашому профілі, система пропустить цей рядок, щоб уникнути дублікатів.</div>
+                    </li>
+                    <li class="list-group-item p-3 border-start border-warning border-4 mb-2 bg-light rounded-end">
+                        <strong class="text-dark">bee_species</strong> <span class="badge bg-secondary ms-1">Опціонально</span>
+                        <div class="text-muted small mt-1">Порода бджолосім'ї текстовим форматом (наприклад: <code>Карпатка</code>, <code>Бакфаст</code>, <code>Українська степова</code>). Якщо залишити стовпець пустим, автоматично запишеться значення "Не вказано".</div>
+                    </li>
+                    <li class="list-group-item p-3 border-start border-warning border-4 mb-2 bg-light rounded-end">
+                        <strong class="text-dark">queen_year</strong> <span class="badge bg-secondary ms-1">Опціонально</span>
+                        <div class="text-muted small mt-1">Рік народження або мічення бджоломатки. Потрібно вказувати виключно як чотиризначне число (наприклад: <code>2024</code>). Якщо поле пусте або заповнене текстом, система автоматично підставить <strong>поточний рік</strong>.</div>
+                    </li>
+                </ul>
+
+                <div class="alert alert-warning border-0 shadow-sm d-flex p-3" role="alert">
+                    <i class="fas fa-exclamation-triangle text-warning fa-lg me-3 mt-1"></i>
+                    <div>
+                        <h6 class="alert-heading fw-bold mb-1">Важливі технічні зауваження:</h6>
+                        <ul class="small mb-0 ps-3">
+                            <li>Формат файлу має бути виключно <strong>.xlsx</strong> (стандартний документ Microsoft Excel) або <strong>.csv</strong>.</li>
+                            <li>Усі назви колонок (шапка таблиці) мають бути написані в <strong>нижньому регістрі</strong> (маленькими літерами) точно так, як у прикладі вище.</li>
+                            <li>Не об'єднуйте клітинки в Excel та переконайтеся, що перед таблицею немає пустих рядків.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

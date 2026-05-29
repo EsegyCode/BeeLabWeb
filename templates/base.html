@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BeeLab Management — Цифрова пасіка</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -39,149 +40,40 @@
             letter-spacing: 1px;
         }
 
-        .nav-link {
-            font-weight: 500;
-            margin: 0 5px;
-            transition: all 0.3s ease;
-            color: rgba(255,255,255,0.8) !important;
-        }
-
-        .nav-link:hover {
-            color: var(--bee-yellow) !important;
-            transform: translateY(-2px);
-        }
-
-        .user-badge {
-            border: 1.5px solid var(--bee-yellow);
-            background: rgba(255, 193, 7, 0.05);
-            color: var(--bee-yellow);
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .user-badge:hover {
-            background: var(--bee-yellow);
-            color: var(--bee-dark) !important;
-        }
-
-        .btn-add-hive {
-            background-color: var(--bee-yellow);
-            color: var(--bee-dark);
-            font-weight: 700;
-            border-radius: 8px;
-            border: none;
-            transition: all 0.3s;
-        }
-
-        .btn-add-hive:hover {
-            background-color: var(--bee-accent);
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
-            color: var(--bee-dark);
-        }
-
         .main-container {
             flex: 1;
             padding-top: 20px;
         }
-
-        .alert {
-            border-radius: 12px;
-            font-weight: 500;
-        }
-
-        footer {
-            background-color: var(--bee-dark);
-            border-top: 1px solid #333;
-            color: #aaa;
-        }
-
-        .weather-card {
-            background: rgba(255,255,255,0.05);
-            padding: 8px 15px;
-            border-radius: 10px;
-            display: inline-block;
-        }
-
-        .dropdown-menu {
-            border-top: 3px solid var(--bee-yellow) !important;
-        }
-
-        .dropdown-item:hover {
-            background-color: rgba(255, 193, 7, 0.1);
-        }
     </style>
 </head>
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-dark shadow mb-4">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('hives.index') }}">
                 <i class="fas fa-bee me-2"></i>BeeLab
             </a>
-
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav ms-auto align-items-center">
-                    {% if current_user.is_authenticated %}
-                        <a class="nav-link" href="{{ url_for('hives.index') }}"><i class="fas fa-home me-1"></i> Головна</a>
-                        <a class="nav-link" href="{{ url_for('hives.calendar') }}"><i class="fas fa-calendar-alt me-1"></i> Календар</a>
-                        <a class="nav-link" href="{{ url_for('analytics.analytics') }}"><i class="fas fa-chart-line me-1"></i> Аналітика</a>
-
-                        <div class="nav-item dropdown mx-lg-3 my-2 my-lg-0">
-                            <a class="nav-link dropdown-toggle user-badge d-inline-block px-3" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--bee-yellow) !important;">
-                                <i class="fas fa-user-circle me-1"></i> {{ current_user.username }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 bg-dark" aria-labelledby="userDropdown">
-                                <li>
-                                    <a class="dropdown-item text-white py-2" href="{{ url_for('auth.profile') }}">
-                                        <i class="fas fa-cog me-2 text-warning"></i> Налаштування
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider bg-secondary"></li>
-                                <li>
-                                    <a class="dropdown-item text-danger py-2" href="{{ url_for('auth.logout') }}">
-                                        <i class="fas fa-sign-out-alt me-2"></i> Вихід
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="ms-lg-2">
-                            <a class="btn btn-add-hive btn-sm px-4 py-2" href="{{ url_for('hives.add_hive') }}">
-                                <i class="fas fa-plus me-1"></i> Вулик
-                            </a>
-                        </div>
-                    {% else %}
-                        <a class="nav-link px-3" href="{{ url_for('auth.login') }}">Увійти</a>
-                        <a class="btn btn-outline-warning btn-sm px-4 rounded-pill" href="{{ url_for('auth.register') }}">Реєстрація</a>
-                    {% endif %}
-                </div>
+            <div class="navbar-nav ms-auto d-flex flex-row gap-3">
+                <a class="nav-link text-white" href="{{ url_for('hives.calendar') }}">
+                    <i class="fas fa-calendar-alt me-1 text-warning"></i> Календар робіт
+                </a>
+                <a class="nav-link text-white" href="{{ url_for('hives.instructions') }}">
+                    <i class="fas fa-book me-1 text-warning"></i> Інструкція з імпорту
+                </a>
             </div>
         </div>
     </nav>
 
     <div class="container main-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
-                <div class="d-flex align-items-center">
-                    {% if category == 'success' %} <i class="fas fa-check-circle me-2"></i>
-                    {% elif category == 'danger' %} <i class="fas fa-exclamation-circle me-2"></i>
-                    {% elif category == 'warning' %} <i class="fas fa-exclamation-triangle me-2"></i>
-                    {% else %} <i class="fas fa-info-circle me-2"></i> {% endif %}
-                    <span>{{ message }}</span>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            {% endfor %}
-          {% endif %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
 
         {% block content %}{% endblock %}
@@ -189,28 +81,6 @@
 
     <footer class="py-4 mt-5">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
-                    <small>&copy; 2026 <strong>BeeLab Management</strong></small><br>
-                    <small class="text-muted">Професійна система керування пасікою</small>
-                </div>
-                <div class="col-md-4 text-center mb-3 mb-md-0">
-                    <span class="text-warning small text-uppercase fw-bold letter-spacing-1">
-                        🐝 Робочий кабінет: {{ current_user.username if current_user.is_authenticated else 'Гість' }}
-                    </span>
-                </div>
-                <div class="col-md-4 text-center text-md-end">
-                    <div class="weather-card">
-                        {% if temp is defined and temp is not none %}
-                            <small class="text-white-50"><i class="fas fa-map-marker-alt me-1"></i> {{ current_user.city if current_user.is_authenticated else 'Суми' }}:</small>
-                            <span class="text-warning fw-bold ms-2">{{ temp|round(1) }}°C</span>
-                            <span class="ms-1">⛅</span>
-                        {% else %}
-                            <small class="text-muted"><i class="fas fa-sync fa-spin me-1"></i> Оновлення погоди...</small>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
         </div>
     </footer>
 

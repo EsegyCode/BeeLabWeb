@@ -60,7 +60,6 @@
                             <td>{{ hive.bee_species }}</td>
                             <td>
                                 {{ hive.queen_year if hive.queen_year else '—' }}
-                                {# Матка вважається старою, якщо їй 3 роки або більше (2026 - 3 = 2023) #}
                                 {% if hive.queen_year and hive.queen_year|int <= 2023 %}
                                     <span class="ms-1" title="Матці 3+ роки, заплануйте заміну">⚠️</span>
                                 {% endif %}
@@ -76,9 +75,13 @@
                                 {% else %}
                                     <span class="badge rounded-pill bg-success px-3">🟢 {{ hive.current_status }}</span>
                                 {% endif %}
-                            </td>
-                            <td class="text-center">
-                                <a href="{{ url_for('hives.view_hive', hive_id=hive.id) }}" class="btn btn-sm btn-dark px-3 shadow-sm">Огляд</a>
+                            </td> <td class="d-flex gap-2 justify-content-center"> <a href="{{ url_for('hives.view_hive', hive_id=hive.id) }}" class="btn btn-dark btn-sm">Огляд</a>
+
+                                <form action="{{ url_for('hives.delete_hive', hive_id=hive.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Ви впевнені, що хочете видалити вулик №{{ hive.hive_number }}? Всі дані оглядів та завдань будуть втрачені назавжди!');">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Видалити вулик">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         {% else %}

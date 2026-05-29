@@ -120,3 +120,31 @@ def calendar():
     tasks = FutureTask.query.join(Hives).filter(Hives.user_id == current_user.id,
                                                 FutureTask.is_completed == False).all()
     return render_template('calendar.html', tasks=tasks, today=date.today())
+
+@hives_bp.route('/instructions')
+def instructions():
+    return render_template('instructions.html')
+
+
+@hives_bp.route('/hive/<int:hive_id>/delete', methods=['POST'])
+@login_required
+def delete_hive(hive_id):
+    # Шукаємо вулик в базі даних
+    hive = db.session.get(Hives, hive_id)
+
+    # Перевірка безпеки: чи існує вулик і чи належить він поточному користувачу
+    if not hive or hive.user_id != current_user.id:
+        flash("Помилка доступу або вулик не знайдено", "danger")
+        return redirect(url_for('hives.index'))
+
+    try:
+        # Завдяки налаштуванню cascade="all, delete-orphan" у файлі models.py,
+        # всі пов'язані завдання та огляди цього вулика видаляться автоматично!
+        db.session.delete(hive)
+        db.session.commit()
+        flash(f"Вулик №{hive.hive_number} успішно видалено.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Не вдалося видалити вулик: {str(e)}", "danger")
+
+    return redirect(url_for('hives.index'))
