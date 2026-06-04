@@ -1,6 +1,12 @@
 import pandas as pd
 from models import db, Hives
 from datetime import date
+from validators import (
+    ValidationError,
+    validate_bee_species,
+    validate_hive_number,
+    validate_queen_year,
+)
 
 
 def import_hives_from_excel(file, user_id):
@@ -23,8 +29,10 @@ def import_hives_from_excel(file, user_id):
         current_year = date.today().year
 
         for _, row in df.iterrows():
-            # Отримуємо номер вулика як рядок
-            h_number = str(row['hive_number']).strip()
+            try:
+                h_number = validate_hive_number(row['hive_number'])
+            except ValidationError:
+                continue
 
             # Перевіряємо, чи не існує вже такий вулик у цього користувача
             existing_hive = Hives.query.filter_by(hive_number=h_number, user_id=user_id).first()
@@ -37,14 +45,14 @@ def import_hives_from_excel(file, user_id):
                 q_year = current_year
             else:
                 try:
-                    q_year = int(q_year)
-                except (ValueError, TypeError):
+                    q_year = validate_queen_year(q_year)
+                except (ValidationError, TypeError):
                     q_year = current_year
 
             # Створюємо новий запис вулика
             new_hive = Hives(
                 hive_number=h_number,
-                bee_species=str(row['bee_species']) if pd.notnull(row['bee_species']) else "Не вказано",
+                bee_species=validate_bee_species(row['bee_species']) if pd.notnull(row['bee_species']) else "Інша",
                 queen_year=q_year,
                 user_id=user_id,  # Обов'язкова прив'язка до акаунта
                 current_status="Імпортовано (все добре)",

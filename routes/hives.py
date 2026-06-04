@@ -4,6 +4,16 @@ from flask_login import login_required, current_user
 from models import db, Hives, HiveInspection, FutureTask
 from core.weather import get_weather
 from datetime import date, timedelta
+from validators import (
+    ValidationError,
+    validate_bee_species,
+    validate_condition,
+    validate_date,
+    validate_hive_number,
+    validate_honey_level,
+    validate_queen_year,
+    validate_quick_action,
+)
 
 hives_bp = Blueprint('hives', __name__)
 
@@ -18,10 +28,9 @@ def index():
     critical_count = Hives.query.filter_by(user_id=current_user.id).filter(
         Hives.current_status.like('%МАТОЧНИКИ%')).count()
 
-    # 2. Рахуємо ті, що потребують уваги
-    # (слово "уваги" АБО рік матки <= 2023, бо зараз 2026)
+    queen_replacement_year = date.today().year - 3
     attention_count = Hives.query.filter_by(user_id=current_user.id).filter(
-        (Hives.current_status.like('%уваги%')) | (Hives.queen_year <= 2023)
+        (Hives.current_status.like('%уваги%')) | (Hives.queen_year <= queen_replacement_year)
     ).count()
 
     stats = {
@@ -35,13 +44,31 @@ def index():
 @login_required
 def add_hive():
     if request.method == 'POST':
-        q_year = request.form.get('queen_year') or date.today().year
+        try:
+            hive_number = validate_hive_number(request.form.get('hive_number'))
+            if Hives.query.filter_by(user_id=current_user.id, hive_number=hive_number).first():
+                flash("Вулик із таким номером вже існує.", "warning")
+                return redirect(url_for('hives.add_hive'))
+
+            has_qc = 'has_queen_cells' in request.form
+            q_year = validate_queen_year(request.form.get('queen_year'))
+            install_date = validate_date(
+                request.form.get('install_date'),
+                default=date.today(),
+                field_name="Дата встановлення",
+            )
+            current_status = "⚠️ МАТОЧНИКИ" if has_qc else "все добре"
+        except ValidationError as exc:
+            flash(str(exc), "danger")
+            return redirect(url_for('hives.add_hive'))
+
         new_hive = Hives(
-            hive_number=request.form.get('hive_number'),
-            bee_species=request.form.get('bee_species'),
-            queen_year=int(q_year),
+            hive_number=hive_number,
+            bee_species=validate_bee_species(request.form.get('bee_species')),
+            queen_year=q_year,
+            install_date=install_date,
             user_id=current_user.id,
-            current_status="все добре",
+            current_status=current_status,
             honey_level="Немає"
         )
         db.session.add(new_hive)
@@ -58,14 +85,20 @@ def view_hive(hive_id):
         return "Доступ заборонено", 403
 
     if request.method == 'POST':
-        # Отримуємо дані з форми огляду
-        has_qc = 'has_queen_cells' in request.form
-        hive.honey_level = request.form.get('honey_level')
+        try:
+            has_qc = 'has_queen_cells' in request.form
+            honey_level = validate_honey_level(request.form.get('honey_level'))
+            condition = validate_condition(request.form.get('condition'))
+        except ValidationError as exc:
+            flash(str(exc), "danger")
+            return redirect(url_for('hives.view_hive', hive_id=hive.id))
+
+        hive.honey_level = honey_level
         hive.current_status = "⚠️ МАТОЧНИКИ" if has_qc else "🟢 Оглянуто"
 
         insp = HiveInspection(
             hive_id=hive.id,
-            condition_description=request.form.get('condition'),
+            condition_description=condition,
             has_queen_cells=has_qc,
             inspection_honey_level=hive.honey_level
         )
@@ -84,12 +117,20 @@ def quick_action(hive_id, action):
     if not hive or hive.user_id != current_user.id:
         return "Помилка доступу", 403
 
+    try:
+        action = validate_quick_action(action)
+    except ValidationError as exc:
+        flash(str(exc), "danger")
+        return redirect(url_for('hives.view_hive', hive_id=hive.id))
+
     today = date.today()
     if action == 'feeding':
         hive.current_status = "🟢 Підкормлено"
+        hive.last_feeding_date = today
         db.session.add(FutureTask(hive_id=hive.id, planned_date=today + timedelta(days=4), task_type="Перевірка корму"))
     elif action == 'mite_plate':
         hive.current_status = "🟢 Пластини встановлено"
+        hive.mite_plate_date = today
         db.session.add(FutureTask(hive_id=hive.id, planned_date=today + timedelta(days=21), task_type="Зняти пластини"))
     elif action == 'harvest':
         hive.current_status = "🧺 Медозбір проведено"

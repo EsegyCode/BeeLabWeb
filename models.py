@@ -61,3 +61,42 @@ class FutureTask(db.Model):
     planned_date = db.Column(db.Date, nullable=False)
     task_type = db.Column(db.String(100))
     is_completed = db.Column(db.Boolean, default=False)
+
+
+class ExpenseLog(db.Model):
+    __tablename__ = 'expense_logs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Numeric(10, 2), nullable=False)
+    category = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(500))
+    date = db.Column(db.Date, nullable=False, default=date.today)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('expense_logs', lazy=True, cascade="all, delete-orphan"))
+
+
+class HoneyHarvestLog(db.Model):
+    __tablename__ = 'honey_harvest_logs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    kg = db.Column(db.Numeric(10, 2), nullable=False)
+    date = db.Column(db.Date, nullable=False, default=date.today)
+    note = db.Column(db.String(500))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('honey_harvest_logs', lazy=True, cascade="all, delete-orphan"))
+
+
+class HoneySaleLog(db.Model):
+    __tablename__ = 'honey_sale_logs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    kg = db.Column(db.Numeric(10, 2), nullable=False)
+    price_per_kg = db.Column(db.Numeric(10, 2), nullable=False)
+    total_amount = db.Column(db.Numeric(10, 2), nullable=False)
+    date = db.Column(db.Date, nullable=False, default=date.today)
+    note = db.Column(db.String(500))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('honey_sale_logs', lazy=True, cascade="all, delete-orphan"))

@@ -2,7 +2,7 @@
 Flask==3.0.0
 Flask-SQLAlchemy==3.1.1
 Flask-Login==0.6.3
-Flask-APScheduler==1.15.0
+Flask-APScheduler==1.13.1
 
 # Робота з базою даних MySQL
 PyMySQL==1.1.0
@@ -20,4 +20,7 @@ Werkzeug==3.0.1
 
 # Зовнішні запити (Погода)
 requests==2.31.0
+
+# Тести
+pytest==8.2.2
 

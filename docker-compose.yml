@@ -7,9 +7,9 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: beekeeping_db
-      MYSQL_ROOT_PASSWORD: root_password_тут
+      MYSQL_ROOT_PASSWORD: my_root_password_123
       MYSQL_USER: mykola_user
-      MYSQL_PASSWORD: user_password_тут
+      MYSQL_PASSWORD: my_secure_password
     ports:
       - "3306:3306"
     volumes:

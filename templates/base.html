@@ -11,55 +11,185 @@
 
     <style>
         :root {
-            --bee-yellow: #ffc107;
-            --bee-dark: #1e1e1e;
-            --bee-light: #f4f7f6;
-            --bee-accent: #e5ac00;
+            --bee-bg: #F8F9FA;
+            --bee-accent: #FD7E14;
+            --bee-accent-dark: #DC6502;
+            --bee-dark: #212529;
+            --bee-muted: #6C757D;
+            --bee-soft: #E9ECEF;
+            --bee-border: rgba(33, 37, 41, 0.08);
+            --bee-shadow: 0 0.5rem 1.5rem rgba(33, 37, 41, 0.06);
+            --bs-primary: var(--bee-accent);
+            --bs-primary-rgb: 253, 126, 20;
+            --bs-body-color: var(--bee-dark);
+            --bs-body-bg: var(--bee-bg);
+            --bs-link-color: var(--bee-accent);
+            --bs-link-hover-color: var(--bee-accent-dark);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bee-light);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            color: var(--bee-dark);
+            background: var(--bee-bg);
         }
 
         .navbar {
-            background-color: var(--bee-dark) !important;
-            border-bottom: 3px solid var(--bee-yellow);
-            padding: 0.8rem 0;
+            padding: 0.85rem 0;
+            background: rgba(255, 255, 255, 0.96) !important;
+            border-bottom: 1px solid var(--bee-border);
+            backdrop-filter: blur(10px);
         }
 
         .navbar-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--bee-yellow) !important;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: var(--bee-dark) !important;
+            letter-spacing: 0;
+        }
+
+        .navbar-brand i,
+        .navbar .nav-link i {
+            color: var(--bee-accent) !important;
+        }
+
+        .navbar .nav-link {
+            color: var(--bee-dark) !important;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            padding: 0.65rem 0.85rem;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .nav-link:focus,
+        .navbar .nav-link.active {
+            color: var(--bee-accent) !important;
+            background-color: rgba(253, 126, 20, 0.1);
         }
 
         .main-container {
             flex: 1;
-            padding-top: 20px;
+            padding-top: 1.5rem;
+            padding-bottom: 2.5rem;
+        }
+
+        .card {
+            border: 1px solid var(--bee-border);
+            border-radius: 1rem;
+            background-color: #fff;
+            box-shadow: var(--bee-shadow);
+        }
+
+        .card-header {
+            border-bottom: 1px solid var(--bee-border);
+            border-radius: 1rem 1rem 0 0 !important;
+            background-color: #fff;
+        }
+
+        .btn {
+            border-radius: 0.75rem;
+            font-weight: 600;
+            padding: 0.6rem 1rem;
+        }
+
+        .btn-sm {
+            border-radius: 0.65rem;
+            padding: 0.4rem 0.75rem;
+        }
+
+        .btn-orange,
+        .btn-primary {
+            --bs-btn-color: #fff;
+            --bs-btn-bg: var(--bee-accent);
+            --bs-btn-border-color: var(--bee-accent);
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: var(--bee-accent-dark);
+            --bs-btn-hover-border-color: var(--bee-accent-dark);
+            --bs-btn-focus-shadow-rgb: 253, 126, 20;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: var(--bee-accent-dark);
+            --bs-btn-active-border-color: var(--bee-accent-dark);
+            --bs-btn-disabled-color: #fff;
+            --bs-btn-disabled-bg: var(--bee-accent);
+            --bs-btn-disabled-border-color: var(--bee-accent);
+        }
+
+        .btn-outline-primary,
+        .btn-outline-orange {
+            --bs-btn-color: var(--bee-accent);
+            --bs-btn-border-color: var(--bee-accent);
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: var(--bee-accent);
+            --bs-btn-hover-border-color: var(--bee-accent);
+            --bs-btn-focus-shadow-rgb: 253, 126, 20;
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: var(--bee-accent-dark);
+            --bs-btn-active-border-color: var(--bee-accent-dark);
+        }
+
+        .text-orange {
+            color: var(--bee-accent) !important;
+        }
+
+        .bg-soft {
+            background-color: var(--bee-soft) !important;
+        }
+
+        .table {
+            --bs-table-color: var(--bee-dark);
+            --bs-table-hover-bg: rgba(253, 126, 20, 0.06);
+        }
+
+        .table-light {
+            --bs-table-bg: var(--bee-soft);
+            --bs-table-color: var(--bee-dark);
+            border-color: var(--bee-border);
+        }
+
+        .badge {
+            font-weight: 600;
+            letter-spacing: 0;
+        }
+
+        .alert {
+            border: 0;
+            border-radius: 1rem;
+            box-shadow: var(--bee-shadow);
+        }
+
+        footer {
+            color: var(--bee-muted);
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark shadow mb-4">
+    <nav class="navbar navbar-expand-lg sticky-top shadow-sm mb-4">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('hives.index') }}">
-                <i class="fas fa-bee me-2"></i>BeeLab
+                <i class="fas fa-bee"></i>BeeLab
             </a>
-            <div class="navbar-nav ms-auto d-flex flex-row gap-3">
-                <a class="nav-link text-white" href="{{ url_for('hives.calendar') }}">
-                    <i class="fas fa-calendar-alt me-1 text-warning"></i> Календар робіт
-                </a>
-                <a class="nav-link text-white" href="{{ url_for('hives.instructions') }}">
-                    <i class="fas fa-book me-1 text-warning"></i> Інструкція з імпорту
-                </a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Перемкнути навігацію">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <div class="navbar-nav ms-auto gap-lg-2 pt-3 pt-lg-0">
+                    <a class="nav-link" href="{{ url_for('hives.calendar') }}">
+                        <i class="fas fa-calendar-alt me-1"></i> Календар робіт
+                    </a>
+                    <a class="nav-link" href="{{ url_for('finance.finance') }}">
+                        <i class="fas fa-wallet me-1"></i> Фінанси
+                    </a>
+                    <a class="nav-link" href="{{ url_for('hives.instructions') }}">
+                        <i class="fas fa-book me-1"></i> Інструкція з імпорту
+                    </a>
+                </div>
             </div>
         </div>
     </nav>

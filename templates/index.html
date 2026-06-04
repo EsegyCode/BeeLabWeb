@@ -1,52 +1,82 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>📊 Стан пасіки</h2>
-        <div class="btn-group shadow-sm">
-            <a href="{{ url_for('hives.add_hive') }}" class="btn btn-primary">+ Додати вулик</a>
-            <a href="{{ url_for('analytics.analytics') }}" class="btn btn-outline-secondary">📥 Імпорт Excel</a>
+<div class="py-2">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+        <div>
+            <p class="text-uppercase text-orange fw-bold small mb-2">Панель керування</p>
+            <h1 class="h2 fw-bold mb-1">Стан пасіки</h1>
+            <p class="text-muted mb-0">Швидкий огляд вуликів, статусів і завдань, що потребують уваги.</p>
+        </div>
+        <div class="d-flex flex-column flex-sm-row gap-2">
+            <a href="{{ url_for('hives.add_hive') }}" class="btn btn-orange shadow-sm">
+                <i class="fas fa-plus me-2"></i>Додати вулик
+            </a>
+            <a href="{{ url_for('analytics.analytics') }}" class="btn btn-outline-orange bg-white shadow-sm">
+                <i class="fas fa-file-import me-2"></i>Імпорт Excel
+            </a>
         </div>
     </div>
 
-    <div class="row mb-4">
+    <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="card bg-primary text-white shadow-sm border-0">
-                <div class="card-body text-center">
-                    <h5 class="card-title opacity-75">Всього вуликів</h5>
-                    <p class="display-4 fw-bold mb-0">{{ stats.total }}</p>
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="text-muted fw-semibold">Всього вуликів</span>
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-3 bg-soft text-orange p-2">
+                            <i class="fas fa-boxes-stacked"></i>
+                        </span>
+                    </div>
+                    <p class="display-5 fw-bold mb-0">{{ stats.total }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-warning text-dark shadow-sm border-0">
-                <div class="card-body text-center">
-                    <h5 class="card-title opacity-75">Потребують уваги</h5>
-                    <p class="display-4 fw-bold mb-0">{{ stats.attention }}</p>
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="text-muted fw-semibold">Потребують уваги</span>
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-3 bg-warning-subtle text-warning-emphasis p-2">
+                            <i class="fas fa-triangle-exclamation"></i>
+                        </span>
+                    </div>
+                    <p class="display-5 fw-bold mb-0">{{ stats.attention }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-danger text-white shadow-sm border-0">
-                <div class="card-body text-center">
-                    <h5 class="card-title opacity-75">Критичні (Маточники)</h5>
-                    <p class="display-4 fw-bold mb-0">{{ stats.critical }}</p>
+            <div class="card h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="text-muted fw-semibold">Критичні</span>
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-3 bg-danger-subtle text-danger p-2">
+                            <i class="fas fa-circle-exclamation"></i>
+                        </span>
+                    </div>
+                    <p class="display-5 fw-bold mb-0">{{ stats.critical }}</p>
+                    <p class="text-muted small mb-0">Маточники або терміновий статус</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-white py-3 border-bottom">
-            <h5 class="mb-0 fw-bold text-secondary">Реєстр вуликів</h5>
+    <div class="card">
+        <div class="card-header px-4 py-3">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                <div>
+                    <h2 class="h5 mb-1 fw-bold">Реєстр вуликів</h2>
+                    <p class="text-muted small mb-0">Актуальний список сімей і поточних станів.</p>
+                </div>
+                <span class="badge rounded-pill text-bg-light border px-3 py-2">{{ stats.total }} записів</span>
+            </div>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="px-4">№ Вулика</th>
+                            <th class="px-4 py-3">№ Вулика</th>
                             <th>Порода</th>
                             <th>Рік матки</th>
                             <th>Поточний статус</th>
@@ -56,39 +86,60 @@
                     <tbody>
                         {% for hive in hives %}
                         <tr>
-                            <td class="px-4 fw-bold text-dark">#{{ hive.hive_number }}</td>
+                            <td class="px-4 py-3 fw-bold text-dark">#{{ hive.hive_number }}</td>
                             <td>{{ hive.bee_species }}</td>
                             <td>
                                 {{ hive.queen_year if hive.queen_year else '—' }}
                                 {% if hive.queen_year and hive.queen_year|int <= 2023 %}
-                                    <span class="ms-1" title="Матці 3+ роки, заплануйте заміну">⚠️</span>
+                                    <span class="ms-1 text-warning" title="Матці 3+ роки, заплануйте заміну">
+                                        <i class="fas fa-triangle-exclamation"></i>
+                                    </span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% set status = hive.current_status|lower %}
                                 {% if 'маточники' in status %}
-                                    <span class="badge rounded-pill bg-danger px-3">🔴 {{ hive.current_status }}</span>
+                                    <span class="badge rounded-pill bg-danger-subtle text-danger px-3 py-2">
+                                        <i class="fas fa-circle me-1"></i>{{ hive.current_status }}
+                                    </span>
                                 {% elif hive.queen_year and hive.queen_year|int <= 2023 %}
-                                    <span class="badge rounded-pill bg-warning text-dark px-3">🟡 Потребує заміни матки</span>
+                                    <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis px-3 py-2">
+                                        <i class="fas fa-circle me-1"></i>Потребує заміни матки
+                                    </span>
                                 {% elif 'уваги' in status %}
-                                    <span class="badge rounded-pill bg-warning text-dark px-3">🟡 {{ hive.current_status }}</span>
+                                    <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis px-3 py-2">
+                                        <i class="fas fa-circle me-1"></i>{{ hive.current_status }}
+                                    </span>
                                 {% else %}
-                                    <span class="badge rounded-pill bg-success px-3">🟢 {{ hive.current_status }}</span>
+                                    <span class="badge rounded-pill bg-success-subtle text-success px-3 py-2">
+                                        <i class="fas fa-circle me-1"></i>{{ hive.current_status }}
+                                    </span>
                                 {% endif %}
-                            </td> <td class="d-flex gap-2 justify-content-center"> <a href="{{ url_for('hives.view_hive', hive_id=hive.id) }}" class="btn btn-dark btn-sm">Огляд</a>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a href="{{ url_for('hives.view_hive', hive_id=hive.id) }}" class="btn btn-dark btn-sm">
+                                        <i class="fas fa-eye me-1"></i>Огляд
+                                    </a>
 
-                                <form action="{{ url_for('hives.delete_hive', hive_id=hive.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Ви впевнені, що хочете видалити вулик №{{ hive.hive_number }}? Всі дані оглядів та завдань будуть втрачені назавжди!');">
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Видалити вулик">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
+                                    <form action="{{ url_for('hives.delete_hive', hive_id=hive.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Ви впевнені, що хочете видалити вулик №{{ hive.hive_number }}? Всі дані оглядів та завдань будуть втрачені назавжди!');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Видалити вулик">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="5" class="text-center py-5 text-muted italic">
-                                <div class="mb-2">📭 База даних порожня.</div>
-                                <a href="{{ url_for('analytics.analytics') }}" class="btn btn-sm btn-outline-primary">Завантажити дані з Excel</a>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <div class="d-inline-flex align-items-center justify-content-center rounded-4 bg-soft text-orange p-3 mb-3">
+                                    <i class="fas fa-inbox fa-lg"></i>
+                                </div>
+                                <div class="fw-semibold text-dark mb-2">База даних порожня.</div>
+                                <a href="{{ url_for('analytics.analytics') }}" class="btn btn-sm btn-outline-orange">
+                                    <i class="fas fa-file-import me-1"></i>Завантажити дані з Excel
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}

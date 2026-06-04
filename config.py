@@ -18,3 +18,10 @@ class Config:
     WEATHER_CITY = "Sumy"
 
     SCHEDULER_API_ENABLED = True
+
+
+class TestingConfig(Config):
+    TESTING = True
+    WTF_CSRF_ENABLED = False
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    SCHEDULER_API_ENABLED = False

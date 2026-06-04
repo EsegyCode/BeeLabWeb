@@ -14,7 +14,11 @@ analytics_bp = Blueprint('analytics', __name__)
 def analytics():
     if request.method == 'POST':
         file = request.files.get('file')
-        if file:
+        if not file or not file.filename:
+            flash("Оберіть Excel-файл для імпорту.", "danger")
+        elif not file.filename.lower().endswith(('.xlsx', '.xls')):
+            flash("Підтримуються лише файли Excel (.xlsx або .xls).", "danger")
+        else:
             success, msg = import_hives_from_excel(file, current_user.id)
             flash(msg, "success" if success else "danger")
 

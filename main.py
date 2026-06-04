@@ -9,13 +9,14 @@ from core.scheduler_tasks import send_daily_briefing
 from routes.auth import auth_bp
 from routes.hives import hives_bp
 from routes.analytics import analytics_bp
+from routes.finance import finance_bp
 
 # 1. Створюємо об'єкт планувальника ПОЗА функцією create_app
 scheduler = APScheduler()
 
-def create_app():
+def create_app(config_object=Config):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config_object)
 
     db.init_app(app)
 
@@ -30,12 +31,13 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(hives_bp)
     app.register_blueprint(analytics_bp)
+    app.register_blueprint(finance_bp)
 
     with app.app_context():
         db.create_all()
 
     # 2. Ініціалізуємо планувальник тут, але старт винесемо
-    if not scheduler.running:
+    if app.config.get('SCHEDULER_API_ENABLED', True) and not scheduler.running:
         scheduler.init_app(app)
         scheduler.start()
 
@@ -50,4 +52,4 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     # 3. Використовуй use_reloader=False, якщо хочеш уникнути подвійного запуску при дебазі
-    app.run(debug=True, port=5000, use_reloader=False)
+    app.run(host='0.0.0.0', debug=True, port=5000, use_reloader=False)
