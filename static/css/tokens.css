@@ -1,77 +1,86 @@
-:root {
-  --bee-bg: #FFF8E7;
-  --bee-surface: #FFFFFF;
-  --bee-text: #3B2A1A;
-  --bee-muted: #6B5A45;
-  --bee-border: rgba(59, 42, 26, 0.12);
-  --bee-shadow: 0 0.5rem 1.5rem rgba(59, 42, 26, 0.08);
-  --bee-accent: #F2A900;
-  --bee-accent-dark: #E09100;
-  --bee-success: #4C8C4A;
-  --bee-danger: #C93A2B;
+:root,
+[data-bs-theme="light"] {
+  --bl-bg: #FFFBF0;
+  --bl-surface: #FFFFFF;
+  --bl-surface-2: #FFF3D6;
+  --bl-border: #EADFC6;
+  --bl-text: #2B2118;
+  --bl-text-muted: #7A6A55;
+  --bl-primary: #FFB400;
+  --bl-primary-hover: #E8A000;
+  --bl-primary-text: #2B2118;
+  --bl-success: #2E9E4F;
+  --bl-warning: #F59E0B;
+  --bl-danger: #E5383B;
+  --bl-info: #1E88E5;
+
+  --bee-bg: var(--bl-bg);
+  --bee-surface: var(--bl-surface);
+  --bee-surface-2: var(--bl-surface-2);
+  --bee-border: var(--bl-border);
+  --bee-text: var(--bl-text);
+  --bee-muted: var(--bl-text-muted);
+  --bee-accent: var(--bl-primary);
+  --bee-accent-dark: var(--bl-primary-hover);
+  --bee-success: var(--bl-success);
+  --bee-danger: var(--bl-danger);
   --bee-radius: 1rem;
+  --bee-shadow: 0 0.5rem 1.5rem rgba(43, 33, 24, 0.08);
   --bee-tap: 44px;
+
+  --bs-body-bg: var(--bl-bg);
+  --bs-body-color: var(--bl-text);
+  --bs-border-color: var(--bl-border);
+  --bs-primary: var(--bl-primary);
+  --bs-primary-rgb: 255, 180, 0;
+  --bs-link-color: #B36B00;
+  --bs-link-hover-color: #8A5200;
+  --bs-success: var(--bl-success);
+  --bs-warning: var(--bl-warning);
+  --bs-danger: var(--bl-danger);
+  --bs-info: var(--bl-info);
   --bs-body-font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Liberation Sans", sans-serif;
-  --bs-body-color: var(--bee-text);
-  --bs-body-bg: var(--bee-bg);
-  --bs-border-color: var(--bee-border);
-  --bs-primary: #F2A900;
-  --bs-primary-rgb: 242, 169, 0;
-  --bs-link-color: var(--bee-accent-dark);
-  --bs-link-hover-color: #B87500;
-  --bs-success: var(--bee-success);
-  --bs-danger: var(--bee-danger);
-  --bs-border-radius: var(--bee-radius);
+  --bs-border-radius: 1rem;
+  --bs-secondary-color: var(--bl-text-muted);
 }
 
 [data-bs-theme="dark"] {
-  --bee-bg: #1E160F;
-  --bee-surface: #2A1F15;
-  --bee-text: #F5E9D8;
-  --bee-muted: #CDB9A1;
-  --bee-border: rgba(245, 233, 216, 0.12);
+  --bl-bg: #1F170F;
+  --bl-surface: #2A1F15;
+  --bl-surface-2: #3A2A1A;
+  --bl-border: #4A3524;
+  --bl-text: #F5E9D8;
+  --bl-text-muted: #CDB9A1;
+  --bl-primary: #FFB400;
+  --bl-primary-hover: #E8A000;
+  --bl-primary-text: #2B2118;
+  --bl-success: #3FBE63;
+  --bl-warning: #FBBF24;
+  --bl-danger: #F06567;
+  --bl-info: #4EA8F0;
+
+  --bee-bg: var(--bl-bg);
+  --bee-surface: var(--bl-surface);
+  --bee-surface-2: var(--bl-surface-2);
+  --bee-border: var(--bl-border);
+  --bee-text: var(--bl-text);
+  --bee-muted: var(--bl-text-muted);
+  --bee-accent: var(--bl-primary);
+  --bee-accent-dark: var(--bl-primary-hover);
+  --bee-success: var(--bl-success);
+  --bee-danger: var(--bl-danger);
   --bee-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.35);
-  --bs-body-color: var(--bee-text);
-  --bs-body-bg: var(--bee-bg);
-  --bs-border-color: var(--bee-border);
-}
 
-/* Відступи/тап-зони */
-.btn, .form-control, .form-select, .nav-link {
-  min-height: var(--bee-tap);
-}
-
-.btn-sm {
-  min-height: 36px;
-}
-
-/* Доступність */
-.skip-link {
-  position: absolute;
-  left: -9999px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-.skip-link:focus {
-  left: 1rem;
-  top: 1rem;
-  width: auto;
-  height: auto;
-  padding: .5rem 1rem;
-  background: var(--bee-surface);
-  color: var(--bee-text);
-  border: 1px solid var(--bee-border);
-  border-radius: .5rem;
-  z-index: 1000;
-}
-
-main#content {
-  scroll-margin-top: 5rem;
-}
-
-/* Флешки */
-.flash-stack [role="alert"] {
-  border-left: 4px solid var(--bee-accent);
+  --bs-body-bg: var(--bl-bg);
+  --bs-body-color: var(--bl-text);
+  --bs-border-color: var(--bl-border);
+  --bs-primary: var(--bl-primary);
+  --bs-primary-rgb: 255, 180, 0;
+  --bs-link-color: var(--bl-primary);
+  --bs-link-hover-color: var(--bl-primary-hover);
+  --bs-success: var(--bl-success);
+  --bs-warning: var(--bl-warning);
+  --bs-danger: var(--bl-danger);
+  --bs-info: var(--bl-info);
+  --bs-secondary-color: var(--bl-text-muted);
 }
