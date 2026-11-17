@@ -1,25 +1,28 @@
+{% from "macros/icons.html" import icon %}
 <!DOCTYPE html>
 <html lang="uk" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>{% block title %}BeeLab — Цифрова пасіка{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}Органайзер для пасічників: вулики, огляди, календар завдань, фінанси та Telegram-нагадування.{% endblock %}">
+    <title>{% block title %}BeeLab — Р¦РёС„СЂРѕРІР° РїР°СЃС–РєР°{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}РћСЂРіР°РЅР°Р№Р·РµСЂ РґР»СЏ РїР°СЃС–С‡РЅРёРєС–РІ: РІСѓР»РёРєРё, РѕРіР»СЏРґРё, РєР°Р»РµРЅРґР°СЂ Р·Р°РІРґР°РЅСЊ, С„С–РЅР°РЅСЃРё С‚Р° Telegram-РЅР°РіР°РґСѓРІР°РЅРЅСЏ.{% endblock %}">
     <meta name="theme-color" content="#F2A900">
     <meta name="color-scheme" content="light dark">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/5.3.0/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-icons/1.11.3/css/bootstrap-icons.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <script src="{{ url_for('static', filename='js/theme-init.js') }}"></script>
     {% block page_css %}{% endblock %}
 </head>
 <body>
-    <a class="skip-link" href="#content">Перейти до змісту</a>
+    {% include "partials/_sprite.svg" %}
+    <a class="skip-link" href="#content">ПРµСЂРµР№С‚Рё РґРѕ Р·РјС–СЃС‚Сѓ</a>
 
     {% include "partials/_header.html" %}
 
+    {% include "partials/_confirm_modal.html" %}
     <div class="app-shell">
         <main id="content" class="app-main container py-4" tabindex="-1">
             {% include "partials/_flash.html" %}
@@ -30,12 +33,12 @@
     </div>
 
     {% if current_user.is_authenticated %}
-    <nav class="bottom-nav d-lg-none" aria-label="Нижня навігація">
-        <a href="{{ url_for('hives.index') }}" class="{% if (request.endpoint or '').startswith('hives.index') %}active{% endif %}"><i class="bi bi-boxes" aria-hidden="true"></i><span>Вулики</span></a>
-        <a href="{{ url_for('hives.calendar') }}" class="{% if (request.endpoint or '').startswith('hives.calendar') %}active{% endif %}"><i class="bi bi-calendar3" aria-hidden="true"></i><span>Календар</span></a>
-        <a href="{{ url_for('finance.finance') }}" class="{% if (request.endpoint or '').startswith('finance.') %}active{% endif %}"><i class="bi bi-wallet2" aria-hidden="true"></i><span>Фінанси</span></a>
-        <a href="{{ url_for('analytics.analytics') }}" class="{% if (request.endpoint or '').startswith('analytics.') %}active{% endif %}"><i class="bi bi-graph-up" aria-hidden="true"></i><span>Аналітика</span></a>
-        <a href="{{ url_for('auth.profile') }}" class="{% if (request.endpoint or '').startswith('auth.profile') %}active{% endif %}"><i class="bi bi-person" aria-hidden="true"></i><span>Профіль</span></a>
+    <nav class="bottom-nav d-lg-none" aria-label="РќРёР¶РЅСЏ РЅР°РІС–РіР°С†С–СЏ">
+        <a href="{{ url_for('hives.index') }}" class="{% if (request.endpoint or '').startswith('hives.index') %}active{% endif %}">{{ icon('boxes') }}<span>ВСѓР»РёРєРё</span></a>
+        <a href="{{ url_for('hives.calendar') }}" class="{% if (request.endpoint or '').startswith('hives.calendar') %}active{% endif %}">{{ icon('calendar3') }}<span>КР°Р»РµРЅРґР°СЂ</span></a>
+        <a href="{{ url_for('finance.finance') }}" class="{% if (request.endpoint or '').startswith('finance.') %}active{% endif %}">{{ icon('wallet2') }}<span>ФС–РЅР°РЅСЃРё</span></a>
+        <a href="{{ url_for('analytics.analytics') }}" class="{% if (request.endpoint or '').startswith('analytics.') %}active{% endif %}">{{ icon('graph-up') }}<span>РђРЅР°Р»С–С‚РёРєР°</span></a>
+        <a href="{{ url_for('auth.profile') }}" class="{% if (request.endpoint or '').startswith('auth.profile') %}active{% endif %}">{{ icon('person') }}<span>ПСЂРѕС„С–Р»СЊ</span></a>
     </nav>
     {% endif %}
 
@@ -43,6 +46,7 @@
 
     <script defer src="{{ url_for('static', filename='vendor/bootstrap/5.3.0/js/bootstrap.bundle.min.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
     {% block page_js %}{% endblock %}
 </body>
 </html>

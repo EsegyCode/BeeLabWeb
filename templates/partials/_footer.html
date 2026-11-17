@@ -1,14 +1,22 @@
+{% from "macros/icons.html" import icon %}
         <footer class="app-footer">
             <div class="container">
                 <div class="row g-4">
                     <div class="col-12 col-md-4">
-                        <div class="fw-bold mb-2"><span class="brand-dot" aria-hidden="true"></span>BeeLab</div>
+                        <div class="fw-bold mb-2 d-flex align-items-center gap-2"><span class="brand-mark" aria-hidden="true">{{ icon('hive') }}</span>BeeLab</div>
                         <p class="small text-muted mb-2">Цифрова пасіка: вулики, огляди, календар завдань, фінанси та Telegram-нагадування.</p>
-                        {% if TELEGRAM_BOT_USERNAME %}<a href="https://t.me/{{ TELEGRAM_BOT_USERNAME }}" class="small text-decoration-none" rel="noopener noreferrer" target="_blank"><i class="bi bi-telegram me-1" aria-hidden="true"></i>Telegram-бот</a>{% else %}<span class="small text-muted">Telegram-бот не налаштовано</span>{% endif %}
+                        {% if TELEGRAM_BOT_USERNAME %}
+                        <a href="https://t.me/{{ TELEGRAM_BOT_USERNAME }}" class="small text-decoration-none d-inline-flex align-items-center gap-1" rel="noopener noreferrer" target="_blank">
+                            {{ icon('telegram', 'me-1') }}Telegram-бот
+                        </a>
+                        {% else %}
+                        <span class="small text-muted">Telegram-бот не налаштовано</span>
+                        {% endif %}
                     </div>
                     <div class="col-6 col-md-2">
                         <div class="fw-semibold mb-2">Продукт</div>
                         <ul class="list-unstyled small mb-0">
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.index') if current_user.is_authenticated else url_for('auth.login') }}">Дашборд</a></li>
                             <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.index') if current_user.is_authenticated else url_for('auth.login') }}">Вулики</a></li>
                             <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.calendar') }}">Календар</a></li>
                             <li><a class="text-decoration-none text-muted" href="{{ url_for('finance.finance') }}">Фінанси</a></li>
@@ -19,15 +27,16 @@
                         <div class="fw-semibold mb-2">Допомога</div>
                         <ul class="list-unstyled small mb-0">
                             <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">Інструкція з імпорту</a></li>
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">FAQ</a></li>
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('auth.profile') }}">Профіль</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('auth.faq') }}">FAQ</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('auth.about') }}">Про проєкт</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('auth.profile') if current_user.is_authenticated else url_for('auth.login') }}">Профіль</a></li>
                         </ul>
                     </div>
                     <div class="col-6 col-md-2">
                         <div class="fw-semibold mb-2">Юридичне</div>
                         <ul class="list-unstyled small mb-0">
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">Політика конфіденційності</a></li>
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">Умови використання</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('auth.privacy') }}">Політика конфіденційності</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('auth.terms') }}">Умови використання</a></li>
                         </ul>
                     </div>
                     <div class="col-6 col-md-2">

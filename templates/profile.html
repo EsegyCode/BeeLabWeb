@@ -1,3 +1,4 @@
+{% from "macros/icons.html" import icon %}
 {% extends 'base.html' %}
 
 {% block title %}Налаштування профілю — BeeLab{% endblock %}
@@ -23,7 +24,7 @@
                         <div class="col-12">
                             <label class="form-label fw-semibold" for="telegram_id">Telegram ID</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-telegram" aria-hidden="true"></i></span>
+                                <span class="input-group-text">{{ icon('telegram') }}</span>
                                 <input id="telegram_id" type="text" name="telegram_id" class="form-control" value="{{ current_user.telegram_id or '' }}" placeholder="123456789">
                             </div>
                             <div class="form-text">Заповніть, щоб отримувати ранкові брифінги.</div>
@@ -49,7 +50,7 @@
         </div>
 
         <div class="mt-4">
-            <a href="{{ url_for('hives.index') }}" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Повернутися до дашборду</a>
+            <a href="{{ url_for('hives.index') }}" class="text-decoration-none text-muted small">{{ icon('arrow-left', 'me-1') }}Повернутися до дашборду</a>
         </div>
     </div>
 </div>

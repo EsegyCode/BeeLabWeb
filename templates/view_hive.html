@@ -1,3 +1,4 @@
+{% from "macros/icons.html" import icon %}
 {% extends 'base.html' %}
 
 {% block title %}Вулик №{{ hive.hive_number }} — BeeLab{% endblock %}
@@ -26,19 +27,19 @@
                 <div class="d-grid gap-2 mb-4">
                     <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='feeding') }}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-cup-hot me-2" aria-hidden="true"></i>Підгодовано</button>
+                        <button type="submit" class="btn btn-outline-primary w-100">{{ icon('cup-hot', 'me-2') }}Підгодовано</button>
                     </form>
                     <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='mite_plate') }}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-grid-3x3-gap me-2" aria-hidden="true"></i>Встановлено пластини</button>
+                        <button type="submit" class="btn btn-outline-danger w-100">{{ icon('grid-3x3-gap', 'me-2') }}Встановлено пластини</button>
                     </form>
                     <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='harvest') }}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn btn-outline-warning w-100"><i class="bi bi-droplet me-2" aria-hidden="true"></i>Медозбір проведено</button>
+                        <button type="submit" class="btn btn-outline-warning w-100">{{ icon('droplet', 'me-2') }}Медозбір проведено</button>
                     </form>
                     <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='attention') }}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn btn-outline-secondary w-100"><i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>Потребує уваги</button>
+                        <button type="submit" class="btn btn-outline-secondary w-100">{{ icon('exclamation-triangle', 'me-2') }}Потребує уваги</button>
                     </form>
                 </div>
 
@@ -66,7 +67,7 @@
                 </form>
 
                 <div class="mt-3">
-                    <a href="{{ url_for('hives.index') }}" class="text-decoration-none small text-muted"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Повернутися до списку</a>
+                    <a href="{{ url_for('hives.index') }}" class="text-decoration-none small text-muted">{{ icon('arrow-left', 'me-1') }}Повернутися до списку</a>
                 </div>
             </div>
         </div>

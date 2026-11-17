@@ -53,3 +53,44 @@ body {
     display: block;
   }
 }
+
+.icon {
+  width: 1.1em;
+  height: 1.1em;
+  fill: currentColor;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+}
+.icon-lg {
+  width: 1.5em;
+  height: 1.5em;
+}
+.icon-xl {
+  width: 2em;
+  height: 2em;
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.skip-link:focus {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.5rem;
+  background: var(--bl-primary);
+  color: var(--bl-primary-text);
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 1080;
+  box-shadow: var(--bee-shadow);
+}
+

@@ -87,10 +87,8 @@ def create_app(config_object=None):
     @app.context_processor
     def inject_app_meta():
         def icon(name, cls=""):
-            href = url_for("static", filename="vendor/bootstrap-icons/1.11.3/bootstrap-icons.svg")
             return Markup(
-                f'<svg class="bi-icon {cls}" width="1em" height="1em" viewBox="0 0 16 16" aria-hidden="true" focusable="false">'
-                f'<use href="{href}#{name}"></use></svg>'
+                f'<svg class="icon {cls}" aria-hidden="true" focusable="false"><use href="#i-{name}"/></svg>'
             )
 
         return {

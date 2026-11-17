@@ -1,3 +1,4 @@
+{% from "macros/icons.html" import icon %}
 {% extends 'base.html' %}
 
 {% block title %}Аналітика та дані — BeeLab{% endblock %}
@@ -10,7 +11,7 @@
         <div class="card border-0 h-100">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <i class="bi bi-file-earmark-spreadsheet text-success fs-4" aria-hidden="true"></i>
+                    {{ icon('file-earmark-spreadsheet', 'text-success fs-4') }}
                     <h2 class="h5 fw-bold mb-0">Імпорт вуликів з Excel</h2>
                 </div>
                 <p class="text-muted small">
@@ -23,7 +24,7 @@
                         <input class="form-control" type="file" name="file" accept=".xlsx,.xls" required>
                     </div>
                     <button type="submit" class="btn btn-success w-100">
-                        <i class="bi bi-upload me-2" aria-hidden="true"></i>Завантажити та оновити базу
+                        {{ icon('upload', 'me-2') }}Завантажити та оновити базу
                     </button>
                 </form>
             </div>
@@ -34,19 +35,19 @@
         <div class="card border-0 h-100">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <i class="bi bi-download text-primary fs-4" aria-hidden="true"></i>
+                    {{ icon('download', 'text-primary fs-4') }}
                     <h2 class="h5 fw-bold mb-0">Експорт та звіти</h2>
                 </div>
                 <p class="text-muted small">Збережіть дані про пасіку у зручному форматі для аналізу або друку.</p>
                 <div class="d-grid gap-2">
                     <a href="{{ url_for('analytics.export_pdf') }}" class="btn btn-outline-danger">
-                        <i class="bi bi-file-earmark-pdf me-2" aria-hidden="true"></i>Сформувати PDF-звіт
+                        {{ icon('file-earmark-pdf', 'me-2') }}Сформувати PDF-звіт
                     </a>
                     <a href="{{ url_for('analytics.export_excel') }}" class="btn btn-outline-success">
-                        <i class="bi bi-file-earmark-excel me-2" aria-hidden="true"></i>Вивантажити Excel (.xlsx)
+                        {{ icon('file-earmark-excel', 'me-2') }}Вивантажити Excel (.xlsx)
                     </a>
                     <button class="btn btn-outline-secondary" disabled>
-                        <i class="bi bi-bar-chart me-2" aria-hidden="true"></i>Графіки продуктивності (оновиться)
+                        {{ icon('bar-chart', 'me-2') }}Графіки продуктивності (оновиться)
                     </button>
                 </div>
             </div>

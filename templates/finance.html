@@ -1,3 +1,4 @@
+{% from "macros/icons.html" import icon %}
 {% extends "base.html" %}
 
 {% block content %}
@@ -10,10 +11,10 @@
         </div>
         <div class="d-flex flex-column flex-sm-row gap-2">
             <button type="button" class="btn btn-orange shadow-sm" data-bs-toggle="modal" data-bs-target="#expenseModal">
-                <i class="bi bi-receipt me-2"></i>Додати витрати
+                {{ icon('receipt', 'me-2') }}Додати витрати
             </button>
             <button type="button" class="btn btn-outline-orange bg-white shadow-sm" data-bs-toggle="modal" data-bs-target="#honeyModal">
-                <i class="bi bi-jar me-2"></i>Операції з медом
+                {{ icon('jar', 'me-2') }}Операції з медом
             </button>
         </div>
     </div>
@@ -25,7 +26,7 @@
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <span class="text-muted fw-semibold">Загальний баланс</span>
                         <span class="d-inline-flex align-items-center justify-content-center rounded-3 bg-soft text-orange p-2">
-                            <i class="bi bi-scales"></i>
+                            {{ icon('scales') }}
                         </span>
                     </div>
                     <p class="display-6 fw-bold mb-1">{{ "%.2f"|format(stats.balance) }} грн</p>
@@ -39,7 +40,7 @@
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <span class="text-muted fw-semibold">Усього витрачено</span>
                         <span class="d-inline-flex align-items-center justify-content-center rounded-3 bg-danger-subtle text-danger p-2">
-                            <i class="bi bi-graph-down"></i>
+                            {{ icon('graph-down') }}
                         </span>
                     </div>
                     <p class="display-6 fw-bold mb-1">{{ "%.2f"|format(stats.total_expenses) }} грн</p>
@@ -53,7 +54,7 @@
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <span class="text-muted fw-semibold">Залишок меду</span>
                         <span class="d-inline-flex align-items-center justify-content-center rounded-3 bg-warning-subtle text-warning-emphasis p-2">
-                            <i class="bi bi-box"></i>
+                            {{ icon('box') }}
                         </span>
                     </div>
                     <p class="display-6 fw-bold mb-3">{{ "%.2f"|format(stats.stock_kg) }} кг</p>
