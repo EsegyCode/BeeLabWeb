@@ -44,6 +44,7 @@ class Config:
     REMEMBER_COOKIE_SECURE = os.getenv("REMEMBER_COOKIE_SECURE", "false").lower() == "true"
     PREFERRED_URL_SCHEME = "http"
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
+    APP_VERSION = os.getenv("APP_VERSION", "0.1.0")
 
 
 class DevelopmentConfig(Config):
