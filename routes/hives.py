@@ -2,6 +2,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_required, current_user
 from models import db, Hives, HiveInspection, FutureTask
+from core.ownership import get_owned_or_404, get_task_owned_or_404
 from core.weather import get_weather
 from datetime import date, timedelta
 from validators import (
@@ -80,9 +81,7 @@ def add_hive():
 @hives_bp.route('/hive/<int:hive_id>', methods=['GET', 'POST'])
 @login_required
 def view_hive(hive_id):
-    hive = db.session.get(Hives, hive_id)
-    if not hive or hive.user_id != current_user.id:
-        return "Доступ заборонено", 403
+    hive = get_owned_or_404(Hives, hive_id)
 
     if request.method == 'POST':
         try:
@@ -113,9 +112,7 @@ def view_hive(hive_id):
 @hives_bp.route('/hive/<int:hive_id>/quick_action/<action>', methods=['POST'])
 @login_required
 def quick_action(hive_id, action):
-    hive = db.session.get(Hives, hive_id)
-    if not hive or hive.user_id != current_user.id:
-        return "Помилка доступу", 403
+    hive = get_owned_or_404(Hives, hive_id)
 
     try:
         action = validate_quick_action(action)
@@ -146,12 +143,12 @@ def quick_action(hive_id, action):
 @hives_bp.route('/calendar/complete/<int:task_id>', methods=['POST'])
 @login_required
 def complete_task(task_id): # <--- Назва має бути точно така
-    task = db.session.get(FutureTask, task_id)
-    if task and task.hive.user_id == current_user.id:
+    try:
+        task = get_task_owned_or_404(task_id)
         task.is_completed = True
         db.session.commit()
         flash("Завдання виконано!", "success")
-    else:
+    except Exception:
         flash("Помилка доступу або завдання не знайдено", "danger")
     return redirect(url_for('hives.calendar'))
 
@@ -171,10 +168,9 @@ def instructions():
 @login_required
 def delete_hive(hive_id):
     # Шукаємо вулик в базі даних
-    hive = db.session.get(Hives, hive_id)
-
-    # Перевірка безпеки: чи існує вулик і чи належить він поточному користувачу
-    if not hive or hive.user_id != current_user.id:
+    try:
+        hive = get_owned_or_404(Hives, hive_id)
+    except Exception:
         flash("Помилка доступу або вулик не знайдено", "danger")
         return redirect(url_for('hives.index'))
 

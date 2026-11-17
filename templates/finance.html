@@ -226,7 +226,8 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
                     <button type="submit" class="btn btn-orange">Додати</button>
                 </div>
-            </form>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
         </div>
     </div>
 </div>
@@ -269,7 +270,8 @@
                                     <button type="submit" class="btn btn-orange">Додати</button>
                                 </div>
                             </div>
-                        </form>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
                     </div>
                     <div class="tab-pane fade" id="salePane" role="tabpanel" aria-labelledby="sale-tab">
                         <form method="POST" action="{{ url_for('finance.finance') }}">
@@ -296,7 +298,8 @@
                                     <button type="submit" class="btn btn-orange">Додати</button>
                                 </div>
                             </div>
-                        </form>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
                     </div>
                 </div>
             </div>

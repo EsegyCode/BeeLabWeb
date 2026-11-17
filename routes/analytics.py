@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, flash, send_file, current_app
 from flask_login import login_required, current_user
+from extensions import limiter
 from models import Hives
 from importer import import_hives_from_excel
 from core.exports import generate_excel_report, generate_pdf_report
@@ -33,6 +34,7 @@ def analytics():
 
 @analytics_bp.route('/export/excel')
 @login_required
+@limiter.limit("10 per minute")
 def export_excel():
     hives = Hives.query.filter_by(user_id=current_user.id).all()
     output = generate_excel_report(hives)
@@ -40,6 +42,7 @@ def export_excel():
 
 @analytics_bp.route('/export/pdf')
 @login_required
+@limiter.limit("10 per minute")
 def export_pdf():
     hives = Hives.query.filter_by(user_id=current_user.id).all()
     font_path = os.path.join(current_app.root_path, 'static', 'fonts', 'DejaVuSans.ttf')

@@ -24,7 +24,8 @@
                     </div>
 
                     <button type="submit" class="btn btn-warning w-100 py-2 fw-bold shadow-sm">Створити акаунт</button>
-                </form>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
 
                 <div class="text-center mt-3">
                     <small class="text-muted">Вже є акаунт? <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-bold text-warning">Увійти</a></small>

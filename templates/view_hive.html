@@ -25,16 +25,20 @@
                     <div class="d-grid gap-2 d-md-block mb-4">
                         <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='feeding') }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-primary">🍯 Підкормлено</button>
-                        </form>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
                         <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='mite_plate') }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-danger">💊 Пластина</button>
-                        </form>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
                         <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='harvest') }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-warning">🧺 Медозбір</button>
-                        </form>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
                         <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='attention') }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-warning text-dark">⚠️ Потребує уваги</button>
-                        </form>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
                     </div>
 
                     <form method="POST" action="{{ url_for('hives.view_hive', hive_id=hive.id) }}">
@@ -61,7 +65,8 @@
                         </div>
 
                         <button type="submit" class="btn btn-success w-100 py-2 fw-bold">ЗБЕРЕГТИ ОГЛЯД</button>
-                    </form>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
                 </div>
             </div>
             <a href="{{ url_for('hives.index') }}" class="btn btn-link w-100 text-secondary">← Повернутися до списку</a>

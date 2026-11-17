@@ -55,7 +55,8 @@
                         <button type="submit" class="btn btn-success btn-lg shadow-sm">Зберегти у базу</button>
                         <a href="/" class="btn btn-outline-secondary">Скасувати</a>
                     </div>
-                </form>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
             </div>
         </div>
     </div>

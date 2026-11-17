@@ -1,6 +1,9 @@
+from urllib.parse import urlparse, urljoin
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash
+from extensions import limiter
 from models import db, User
 from validators import (
     ValidationError,
@@ -15,6 +18,7 @@ auth_bp = Blueprint('auth', __name__)
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
     if request.method == 'POST':
         try:
@@ -28,13 +32,18 @@ def login():
 
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
-            return redirect(url_for('hives.index'))
+
+            next_page = request.args.get("next")
+            if next_page and _is_safe_url(next_page):
+                return redirect(next_page)
+            return redirect(url_for("hives.index"))
 
         flash('Невірний логін або пароль!', 'danger')
     return render_template('login.html')
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
+@limiter.limit("3 per minute")
 def register():
     if request.method == 'POST':
         try:
@@ -85,3 +94,11 @@ def profile():
         flash('Профіль успішно оновлено!', 'success')
         return redirect(url_for('auth.profile'))
     return render_template('profile.html')
+
+
+def _is_safe_url(target):
+    if not target:
+        return False
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
