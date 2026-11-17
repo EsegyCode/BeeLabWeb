@@ -1,0 +1,11 @@
+{% macro status_badge(status) -%}
+{%- set badge_class = "text-bg-info" -%}
+{%- if "МАТОЧНИКИ" in (status or "") -%}
+    {%- set badge_class = "text-bg-danger" -%}
+{%- elif "уваги" in (status or "") or "заміни" in (status or "") -%}
+    {%- set badge_class = "text-bg-warning" -%}
+{%- elif "Оглянуто" in (status or "") or "все добре" in (status or "") or "Підгодовано" in (status or "") or "Пластини" in (status or "") or "Медозбір" in (status or "") -%}
+    {%- set badge_class = "text-bg-success" -%}
+{%- endif -%}
+<span class="badge rounded-pill {{ badge_class }}">{{ status }}</span>
+{%- endmacro %}

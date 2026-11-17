@@ -1,4 +1,4 @@
-﻿const financeCanvas = document.getElementById('financeChart');
+const financeCanvas = document.getElementById('financeChart');
 
 if (financeCanvas) {
     let financeChartData = {};

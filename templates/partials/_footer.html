@@ -1,39 +1,39 @@
-﻿        <footer class="app-footer">
+        <footer class="app-footer">
             <div class="container">
                 <div class="row g-4">
                     <div class="col-12 col-md-4">
                         <div class="fw-bold mb-2"><span class="brand-dot" aria-hidden="true"></span>BeeLab</div>
-                        <p class="small text-muted mb-2">Р¦РёС„СЂРѕРІР° РїР°СЃС–РєР°: РІСѓР»РёРєРё, РѕРіР»СЏРґРё, РєР°Р»РµРЅРґР°СЂ Р·Р°РІРґР°РЅСЊ, С„С–РЅР°РЅСЃРё С‚Р° Telegram-РЅР°РіР°РґСѓРІР°РЅРЅСЏ.</p>
-                        <a href="https://t.me/" class="small text-decoration-none" rel="noopener noreferrer" target="_blank"><i class="bi bi-telegram me-1" aria-hidden="true"></i>Telegram-Р±РѕС‚</a>
+                        <p class="small text-muted mb-2">Цифрова пасіка: вулики, огляди, календар завдань, фінанси та Telegram-нагадування.</p>
+                        <a href="https://t.me/" class="small text-decoration-none" rel="noopener noreferrer" target="_blank"><i class="bi bi-telegram me-1" aria-hidden="true"></i>Telegram-бот</a>
                     </div>
                     <div class="col-6 col-md-2">
-                        <div class="fw-semibold mb-2">РџСЂРѕРґСѓРєС‚</div>
+                        <div class="fw-semibold mb-2">Продукт</div>
                         <ul class="list-unstyled small mb-0">
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.index') if current_user.is_authenticated else url_for('auth.login') }}">Р’СѓР»РёРєРё</a></li>
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.calendar') }}">РљР°Р»РµРЅРґР°СЂ</a></li>
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('finance.finance') }}">Р¤С–РЅР°РЅСЃРё</a></li>
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('analytics.analytics') }}">РђРЅР°Р»С–С‚РёРєР°</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.index') if current_user.is_authenticated else url_for('auth.login') }}">Вулики</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.calendar') }}">Календар</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('finance.finance') }}">Фінанси</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('analytics.analytics') }}">Аналітика</a></li>
                         </ul>
                     </div>
                     <div class="col-6 col-md-2">
-                        <div class="fw-semibold mb-2">Р”РѕРїРѕРјРѕРіР°</div>
+                        <div class="fw-semibold mb-2">Допомога</div>
                         <ul class="list-unstyled small mb-0">
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">Р†РЅСЃС‚СЂСѓРєС†С–СЏ Р· С–РјРїРѕСЂС‚Сѓ</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">Інструкція з імпорту</a></li>
                             <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">FAQ</a></li>
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('auth.profile') }}">РџСЂРѕС„С–Р»СЊ</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('auth.profile') }}">Профіль</a></li>
                         </ul>
                     </div>
                     <div class="col-6 col-md-2">
-                        <div class="fw-semibold mb-2">Р®СЂРёРґРёС‡РЅРµ</div>
+                        <div class="fw-semibold mb-2">Юридичне</div>
                         <ul class="list-unstyled small mb-0">
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">РџРѕР»С–С‚РёРєР° РєРѕРЅС„С–РґРµРЅС†С–Р№РЅРѕСЃС‚С–</a></li>
-                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">РЈРјРѕРІРё РІРёРєРѕСЂРёСЃС‚Р°РЅРЅСЏ</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">Політика конфіденційності</a></li>
+                            <li><a class="text-decoration-none text-muted" href="{{ url_for('hives.instructions') }}">Умови використання</a></li>
                         </ul>
                     </div>
                     <div class="col-6 col-md-2">
-                        <div class="fw-semibold mb-2">Р’РµСЂСЃС–СЏ</div>
+                        <div class="fw-semibold mb-2">Версія</div>
                         <p class="small text-muted mb-1">v{{ config.APP_VERSION }}</p>
-                        <a class="small text-decoration-none" href="#content">РќР°РіРѕСЂСѓ в†‘</a>
+                        <a class="small text-decoration-none" href="#content">Нагору ↑</a>
                     </div>
                 </div>
             </div>

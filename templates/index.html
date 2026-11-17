@@ -62,7 +62,7 @@
                         <i class="bi bi-cloud-sun text-orange" aria-hidden="true"></i>
                     </div>
                     <p class="h2 fw-bold mb-0">
-                        {% if temp is not none %}{{ temp }}°C{% else %}—{% endif %}
+                        {% if temp is not none %}{{ temp }}°C{% else %}<span class="weather-unavailable"><i class="bi bi-cloud-slash me-1" aria-hidden="true"></i>Погода недоступна</span>{% endif %}
                     </p>
                 </div>
             </div>
