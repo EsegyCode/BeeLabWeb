@@ -4,7 +4,7 @@
                     <div class="col-12 col-md-4">
                         <div class="fw-bold mb-2"><span class="brand-dot" aria-hidden="true"></span>BeeLab</div>
                         <p class="small text-muted mb-2">Цифрова пасіка: вулики, огляди, календар завдань, фінанси та Telegram-нагадування.</p>
-                        <a href="https://t.me/" class="small text-decoration-none" rel="noopener noreferrer" target="_blank"><i class="bi bi-telegram me-1" aria-hidden="true"></i>Telegram-бот</a>
+                        {% if TELEGRAM_BOT_USERNAME %}<a href="https://t.me/{{ TELEGRAM_BOT_USERNAME }}" class="small text-decoration-none" rel="noopener noreferrer" target="_blank"><i class="bi bi-telegram me-1" aria-hidden="true"></i>Telegram-бот</a>{% else %}<span class="small text-muted">Telegram-бот не налаштовано</span>{% endif %}
                     </div>
                     <div class="col-6 col-md-2">
                         <div class="fw-semibold mb-2">Продукт</div>
