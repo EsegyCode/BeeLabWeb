@@ -1,5 +1,5 @@
 def test_smoke_pages(client, logged_in_client):
-    public_paths = ["/login", "/register"]
+    public_paths = ["/login", "/register", "/about", "/faq", "/privacy", "/terms"]
     for path in public_paths:
         assert client.get(path).status_code == 200
     app_paths = ["/", "/calendar", "/finance", "/analytics", "/profile", "/add_hive", "/instructions"]
