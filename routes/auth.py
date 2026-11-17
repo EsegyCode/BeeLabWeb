@@ -96,6 +96,26 @@ def profile():
     return render_template('profile.html')
 
 
+@auth_bp.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@auth_bp.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+
+@auth_bp.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+
+@auth_bp.route('/terms')
+def terms():
+    return render_template('terms.html')
+
+
 def _is_safe_url(target):
     if not target:
         return False

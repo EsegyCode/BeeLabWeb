@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Допомога / FAQ — {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="fw-bold mb-3">Допомога / FAQ</h1>
+  <div class="accordion" id="faqAccordion">
+    <div class="accordion-item">
+      <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">Як додати вулик?</button></h2>
+      <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">Перейдіть на дашборд та натисніть «Додати вулик».</div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">Як працює календар?</button></h2>
+      <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">Завдання додаються автоматично після оглядів і швидких дій.</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
