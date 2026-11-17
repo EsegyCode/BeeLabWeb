@@ -1,62 +1,61 @@
 {% extends 'base.html' %}
 
+{% block title %}Додати вулик — BeeLab{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary text-white py-3">
-                <h4 class="mb-0">🆕 Реєстрація нового вулика</h4>
-            </div>
-            <div class="card-body p-4">
-                <form method="POST">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Номер вулика</label>
-                            <input type="number" name="hive_number" class="form-control" required placeholder="Напр. 101">
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8 col-xl-7">
+        <div class="card border-0">
+            <div class="card-body p-4 p-lg-5">
+                <h1 class="h3 fw-bold mb-1">Реєстрація нового вулика</h1>
+                <p class="text-muted small mb-4">Вкажіть основні дані сім’ї. Поля можна змінити пізніше.</p>
+                <form method="POST" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" for="hive_number">Номер вулика</label>
+                            <input id="hive_number" type="number" name="hive_number" class="form-control form-control-lg" required placeholder="101">
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Рік народження матки</label>
-                            <input type="number" name="queen_year" class="form-control" value="2025" min="2020" max="2030">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" for="queen_year">Рік народження матки</label>
+                            <input id="queen_year" type="number" name="queen_year" class="form-control" value="2025" min="2020" max="2030">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold" for="bee_species">Порода бджіл</label>
+                            <select id="bee_species" name="bee_species" class="form-select">
+                                <option value="Карпатка">Карпатка</option>
+                                <option value="Бакфаст">Бакфаст</option>
+                                <option value="Українська степова">Українська степова</option>
+                                <option value="Карніка">Карніка</option>
+                                <option value="Інша">Інша / Невідомо</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold" for="install_date">Дата встановлення вулика</label>
+                            <input id="install_date" type="date" name="install_date" class="form-control" value="{{ now_date }}">
+                            <div class="form-text">За замовчуванням — сьогоднішній день.</div>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Порода бджіл</label>
-                        <select name="bee_species" class="form-select">
-                            <option value="Карпатка">Карпатка</option>
-                            <option value="Бакфаст">Бакфаст</option>
-                            <option value="Українська степова">Українська степова</option>
-                            <option value="Карніка">Карніка</option>
-                            <option value="Інша">Інша / Невідомо</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Дата встановлення вулика</label>
-                        <input type="date" name="install_date" class="form-control" value="{{ now_date }}">
-                        <div class="form-text">За замовчуванням — сьогоднішній день.</div>
-                    </div>
-
-                    <div class="card bg-light border-warning mb-4">
+                    <div class="card mt-4 border-warning-subtle">
                         <div class="card-body">
                             <div class="form-check form-switch">
-                                <input type="checkbox" name="has_queen_cells" class="form-check-input" id="qcInit">
-                                <label class="form-check-label text-danger fw-bold" for="qcInit">
-                                    🚨 Виявлено маточники (Ройовий стан)
+                                <input class="form-check-input" type="checkbox" name="has_queen_cells" id="qcInit">
+                                <label class="form-check-label fw-bold text-danger-emphasis" for="qcInit">
+                                    Виявлено маточники (ройовий стан)
                                 </label>
                             </div>
                             <small class="text-muted d-block mt-1">
-                                Якщо позначити це, вулик відразу потрапить до категорії "Критичні".
+                                Якщо позначити, вулик потрапить до критичних одразу після збереження.
                             </small>
                         </div>
                     </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success btn-lg shadow-sm">Зберегти у базу</button>
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-orange btn-lg">Зберегти у базу</button>
                         <a href="/" class="btn btn-outline-secondary">Скасувати</a>
                     </div>
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
+                </form>
             </div>
         </div>
     </div>

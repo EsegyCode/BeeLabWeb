@@ -1,94 +1,95 @@
 {% extends 'base.html' %}
 
+{% block title %}Вулик №{{ hive.hive_number }} — BeeLab{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-5 mb-4">
-            <div class="card shadow border-0 overflow-hidden mb-4">
-                <div class="card-header bg-dark text-white py-3">
-                    <h4 class="mb-0">🏠 Вулик №{{ hive.hive_number }}</h4>
+<div class="row g-4">
+    <div class="col-12 col-lg-5">
+        <div class="card border-0 h-100">
+            <div class="card-body p-4">
+                <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mb-3">
+                    <h1 class="h3 fw-bold mb-0">Вулик №{{ hive.hive_number }}</h1>
+                    <span class="badge text-bg-light align-self-start">{{ hive.bee_species }}</span>
                 </div>
-                <div class="card-body">
-                    <div class="d-flex flex-wrap gap-2 mb-3">
-                        <span class="badge bg-info">🍯 Мед: {{ hive.honey_level }}</span>
-                        {% if hive.mite_plate_date %}
-                            <span class="badge bg-danger">💊 Пластина (з {{ hive.mite_plate_date.strftime('%d.%m') }})</span>
-                        {% endif %}
-                        {% if hive.last_feeding_date %}
-                            <span class="badge bg-warning text-dark">🍯 Годування: {{ hive.last_feeding_date.strftime('%d.%m') }}</span>
-                        {% endif %}
-                    </div>
 
-                    <hr>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="badge text-bg-info-subtle text-info-emphasis">Мед: {{ hive.honey_level }}</span>
+                    {% if hive.mite_plate_date %}
+                        <span class="badge text-bg-danger-subtle text-danger-emphasis">Пластини з {{ hive.mite_plate_date.strftime('%d.%m') }}</span>
+                    {% endif %}
+                    {% if hive.last_feeding_date %}
+                        <span class="badge text-bg-warning-subtle text-warning-emphasis">Годування: {{ hive.last_feeding_date.strftime('%d.%m') }}</span>
+                    {% endif %}
+                </div>
 
-                    <h6 class="fw-bold">Швидкі дії:</h6>
-                    <div class="d-grid gap-2 d-md-block mb-4">
-                        <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='feeding') }}" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-primary">🍯 Підкормлено</button>
+                <h2 class="h6 fw-bold mb-2">Швидкі дії</h2>
+                <div class="d-grid gap-2 mb-4">
+                    <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='feeding') }}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
-                        <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='mite_plate') }}" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">💊 Пластина</button>
+                        <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-cup-hot me-2" aria-hidden="true"></i>Підгодовано</button>
+                    </form>
+                    <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='mite_plate') }}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
-                        <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='harvest') }}" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-warning">🧺 Медозбір</button>
+                        <button type="submit" class="btn btn-outline-danger w-100"><i class="bi bi-grid-3x3-gap me-2" aria-hidden="true"></i>Встановлено пластини</button>
+                    </form>
+                    <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='harvest') }}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
-                        <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='attention') }}" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-warning text-dark">⚠️ Потребує уваги</button>
+                        <button type="submit" class="btn btn-outline-warning w-100"><i class="bi bi-droplet me-2" aria-hidden="true"></i>Медозбір проведено</button>
+                    </form>
+                    <form action="{{ url_for('hives.quick_action', hive_id=hive.id, action='attention') }}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
-                    </div>
+                        <button type="submit" class="btn btn-outline-secondary w-100"><i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>Потребує уваги</button>
+                    </form>
+                </div>
 
-                    <form method="POST" action="{{ url_for('hives.view_hive', hive_id=hive.id) }}">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Рівень меду:</label>
-                            <select name="honey_level" class="form-select">
-                                {% set levels = ["Немає", "Майже немає", "Середньо", "Велика кількість", "Повний вулик"] %}
-                                 {% for level in levels %}
-                                      <option value="{{ level }}" {% if hive.honey_level == level %}selected{% endif %}>
-                                               {{ level }}
-                                     </option>
-                                 {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Нотатки огляду:</label>
-                            <textarea name="condition" class="form-control" rows="3"></textarea>
-                        </div>
-
-                        <div class="form-check form-switch mb-3">
-                            <input type="checkbox" name="has_queen_cells" class="form-check-input" id="qc">
-                            <label class="form-check-label text-danger fw-bold" for="qc">⚠️ МАТОЧНИКИ</label>
-                        </div>
-
-                        <button type="submit" class="btn btn-success w-100 py-2 fw-bold">ЗБЕРЕГТИ ОГЛЯД</button>
+                <hr>
+                <form method="POST" action="{{ url_for('hives.view_hive', hive_id=hive.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="honey_level">Рівень меду</label>
+                        <select id="honey_level" name="honey_level" class="form-select">
+                            {% set levels = ["Немає", "Майже немає", "Середньо", "Велика кількість", "Повний вулик"] %}
+                            {% for level in levels %}
+                                <option value="{{ level }}" {% if hive.honey_level == level %}selected{% endif %}>{{ level }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="condition">Нотатки огляду</label>
+                        <textarea id="condition" name="condition" class="form-control" rows="3" placeholder="Що помітили під час огляду"></textarea>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" name="has_queen_cells" id="qc">
+                        <label class="form-check-label text-danger fw-bold" for="qc">Маточники</label>
+                    </div>
+                    <button type="submit" class="btn btn-orange w-100">Зберегти огляд</button>
+                </form>
+
+                <div class="mt-3">
+                    <a href="{{ url_for('hives.index') }}" class="text-decoration-none small text-muted"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Повернутися до списку</a>
                 </div>
             </div>
-            <a href="{{ url_for('hives.index') }}" class="btn btn-link w-100 text-secondary">← Повернутися до списку</a>
         </div>
+    </div>
 
-        <div class="col-md-7">
-            <h4 class="mb-3">📜 Журнал вулика</h4>
-            <div class="list-group shadow-sm">
-                {% for insp in inspections %}
-                <div class="list-group-item">
-                    <div class="d-flex justify-content-between">
-                        <span class="fw-bold">{{ insp.inspection_date.strftime('%d.%m.%Y') }}</span>
-                        <span class="badge bg-light text-dark">🍯 {{ insp.inspection_honey_level }}</span>
+    <div class="col-12 col-lg-7">
+        <div class="card border-0">
+            <div class="card-body p-4">
+                <h2 class="h4 fw-bold mb-3">Журнал вулика</h2>
+                <div class="list-group">
+                    {% for insp in inspections %}
+                    <div class="list-group-item">
+                        <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                            <span class="fw-bold">{{ insp.inspection_date.strftime('%d.%m.%Y') }}</span>
+                            <span class="badge text-bg-light border">Мед: {{ insp.inspection_honey_level }}</span>
+                        </div>
+                        <p class="mb-1 mt-2">{{ insp.condition_description }}</p>
+                        {% if insp.has_queen_cells %}<small class="text-danger fw-bold">Виявлено маточники</small>{% endif %}
                     </div>
-                    <p class="mb-0 mt-1">{{ insp.condition_description }}</p>
-                    {% if insp.has_queen_cells %}<small class="text-danger fw-bold">(!) Виявлено маточники</small>{% endif %}
+                    {% else %}
+                    <div class="list-group-item text-center text-muted py-5">Історія оглядів порожня.</div>
+                    {% endfor %}
                 </div>
-                {% else %}
-                <div class="list-group-item text-center text-muted">
-                    Історія оглядів порожня
-                </div>
-                {% endfor %}
             </div>
         </div>
     </div>
