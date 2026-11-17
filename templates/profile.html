@@ -1,72 +1,55 @@
 {% extends 'base.html' %}
+
+{% block title %}Налаштування профілю — BeeLab{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-7">
-        <div class="card shadow border-0 mb-4">
-            <div class="card-header bg-dark text-white py-3">
-                <h4 class="mb-0"><i class="fas fa-user-cog me-2 text-warning"></i> Налаштування профілю</h4>
-            </div>
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-9">
+        <h1 class="h2 fw-bold mb-4">Налаштування профілю</h1>
+
+        <div class="card border-0 mb-4">
             <div class="card-body p-4">
-                <form method="POST">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Ваш логін</label>
-                            <input type="text" class="form-control bg-light" value="{{ current_user.username }}" readonly>
+                <form method="POST" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" for="username">Логін</label>
+                            <input id="username" type="text" class="form-control bg-body-tertiary" value="{{ current_user.username }}" readonly>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Місто (для погоди)</label>
-                            <input type="text" name="city" class="form-control" value="{{ current_user.city }}">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" for="city">Місто для погоди</label>
+                            <input id="city" type="text" name="city" class="form-control" value="{{ current_user.city or '' }}" placeholder="Суми">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold" for="telegram_id">Telegram ID</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telegram" aria-hidden="true"></i></span>
+                                <input id="telegram_id" type="text" name="telegram_id" class="form-control" value="{{ current_user.telegram_id or '' }}" placeholder="123456789">
+                            </div>
+                            <div class="form-text">Заповніть, щоб отримувати ранкові брифінги.</div>
                         </div>
                     </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Telegram ID для сповіщень</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-dark text-warning border-0"><i class="fab fa-telegram-plane"></i></span>
-                            <input type="text" name="telegram_id" class="form-control"
-                                   value="{{ current_user.telegram_id or '' }}" placeholder="Наприклад: 123456789">
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-warning w-100 py-2 fw-bold shadow-sm">ЗБЕРЕГТИ ЗМІНИ</button>
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
+                    <button type="submit" class="btn btn-orange mt-4">Зберегти зміни</button>
+                </form>
             </div>
         </div>
 
-        <div class="card border-0 shadow-sm bg-white">
+        <div class="card border-0">
             <div class="card-body p-4">
-                <h5 class="fw-bold mb-3"><i class="fas fa-question-circle text-primary me-2"></i>Як отримувати сповіщення в Telegram?</h5>
-
-                <div class="row g-3">
-                    <div class="col-md-4 text-center">
-                        <div class="p-3 border rounded-3 bg-light h-100">
-                            <div class="h3 text-warning mb-2">1</div>
-                            <p class="small mb-0">Знайдіть бота <a href="https://t.me/userinfobot" target="_blank" class="fw-bold">@userinfobot</a> та напишіть йому будь-що.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="p-3 border rounded-3 bg-light h-100">
-                            <div class="h3 text-warning mb-2">2</div>
-                            <p class="small mb-0">Скопіюйте цифри з поля <b>Id</b> та вставте їх у поле вище.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="p-3 border rounded-3 bg-light h-100">
-                            <div class="h3 text-warning mb-2">3</div>
-                            <p class="small mb-0">Зайдіть у <a href="https://t.me/ТВІЙ_БОТ_ПОСИЛАННЯ" target="_blank" class="fw-bold">наш бот</a> та натисніть <b>/start</b>.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="alert alert-info mt-4 mb-0 border-0">
-                    <small><b>Важливо:</b> Бот зможе надсилати вам ранкові звіти лише після того, як ви натиснете <b>/start</b> у діалозі з ним.</small>
+                <h2 class="h5 fw-bold mb-3">Як підключити Telegram</h2>
+                <ol class="mb-3">
+                    <li>Знайдіть <a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer">@userinfobot</a> і отримайте свій ID.</li>
+                    <li>Вставте ID у поле вище та збережіть.</li>
+                    <li>Відкрийте бота BeeLab і натисніть <strong>/start</strong>.</li>
+                </ol>
+                <div class="alert alert-info mb-0">
+                    <small><strong>Важливо:</strong> бот надсилає брифінги лише після команди /start у діалозі.</small>
                 </div>
             </div>
         </div>
 
-        <div class="text-center mt-4">
-            <a href="{{ url_for('hives.index') }}" class="text-decoration-none text-secondary">← Повернутися на головну</a>
+        <div class="mt-4">
+            <a href="{{ url_for('hives.index') }}" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Повернутися до дашборду</a>
         </div>
     </div>
 </div>
