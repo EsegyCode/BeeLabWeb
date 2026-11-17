@@ -1,3 +1,5 @@
+from enum import Enum
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -100,3 +102,13 @@ class HoneySaleLog(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     user = db.relationship('User', backref=db.backref('honey_sale_logs', lazy=True, cascade="all, delete-orphan"))
+
+
+class HiveStatus(str, Enum):
+    MATOCHNIKY = "⚠️ МАТОЧНИКИ"
+    ALL_GOOD = "все добре"
+    INSPECTED = "🟢 Оглянуто"
+    FED = "🟢 Підкормлено"
+    PLATES = "🟢 Пластини встановлено"
+    HARVEST = "🟡 Медозбір проведено"
+    ATTENTION = "🟡 Потребує уваги"
