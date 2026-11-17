@@ -1,52 +1,63 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>🗓️ Календар планових робіт</h2>
-        <span class="badge bg-secondary">Сьогодні: {{ today.strftime('%d.%m.%Y') }}</span>
-    </div>
+{% block title %}Календар робіт — BeeLab{% endblock %}
 
-    <div class="card shadow border-0">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="px-4">Дата</th>
-                            <th>Вулик</th>
-                            <th>Що зробити</th>
-                            <th class="text-center">Дія</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for task in tasks %}
-                        <tr class="{% if task.planned_date < today %}table-danger{% elif task.planned_date == today %}table-warning{% endif %}">
-                            <td class="px-4 fw-bold">
-                                {{ task.planned_date.strftime('%d.%m.%Y') }}
-                                {% if task.planned_date < today %}
-                                    <span class="badge bg-danger ms-1">ПРОСТРОЧЕНО</span>
-                                {% endif %}
-                            </td>
-                            <td><strong>#{{ task.hive.hive_number }}</strong> ({{ task.hive.bee_species }})</td>
-                            <td>{{ task.task_type }}</td>
-                            <td class="text-center">
-                                <form action="{{ url_for('hives.complete_task', task_id=task.id) }}" method="POST" style="display:inline;">
-                                    <button type="submit" class="btn btn-sm btn-success shadow-sm px-3">✅ Готово</button>
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 fw-bold mb-1">Календар планових робіт</h1>
+        <p class="text-muted mb-0">Завдання, заплановані після оглядів і швидких дій.</p>
+    </div>
+    <span class="badge text-bg-light border align-self-start">Сьогодні: {{ today.strftime('%d.%m.%Y') }}</span>
+</div>
+
+<div class="card border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="px-4 py-3">Дата</th>
+                        <th>Вулик</th>
+                        <th>Що зробити</th>
+                        <th class="text-center">Дія</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr class="{% if task.planned_date < today %}table-danger{% elif task.planned_date == today %}table-warning{% endif %}">
+                        <td class="px-4 fw-bold">
+                            {{ task.planned_date.strftime('%d.%m.%Y') }}
+                            {% if task.planned_date < today %}
+                                <span class="badge text-bg-danger ms-1">Прострочено</span>
+                            {% elif task.planned_date == today %}
+                                <span class="badge text-bg-warning text-dark ms-1">Сьогодні</span>
+                            {% endif %}
+                        </td>
+                        <td><strong>#{{ task.hive.hive_number }}</strong> <span class="text-muted">({{ task.hive.bee_species }})</span></td>
+                        <td>{{ task.task_type }}</td>
+                        <td class="text-center">
+                            <form action="{{ url_for('hives.complete_task', task_id=task.id) }}" method="POST" class="d-inline">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <td colspan="4" class="text-center py-5 text-muted">
-                                ☕ Роботи не заплановано. Можна відпочити!
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="bi bi-check2-circle me-1" aria-hidden="true"></i>Готово
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5">
+                            <div class="empty-state">
+                                <div class="empty-state-icon"><i class="bi bi-cup-hot" aria-hidden="true"></i></div>
+                                <div class="fw-semibold mb-2">Роботи не заплановані.</div>
+                                <p class="small text-muted mb-0">Можна відпочити або перевірити вулики.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
