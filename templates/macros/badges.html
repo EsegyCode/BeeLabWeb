@@ -1,11 +1,19 @@
+{% from "macros/icons.html" import icon %}
 {% macro status_badge(status) -%}
-{%- set badge_class = "text-bg-info" -%}
-{%- if "МАТОЧНИКИ" in (status or "") -%}
-    {%- set badge_class = "text-bg-danger" -%}
-{%- elif "уваги" in (status or "") or "заміни" in (status or "") -%}
-    {%- set badge_class = "text-bg-warning" -%}
-{%- elif "Оглянуто" in (status or "") or "все добре" in (status or "") or "Підгодовано" in (status or "") or "Пластини" in (status or "") or "Медозбір" in (status or "") -%}
-    {%- set badge_class = "text-bg-success" -%}
+{%- set value = (status or '') | string -%}
+{%- set lower_value = value | lower -%}
+{%- if 'МАТОЧНИКИ' in value -%}
+    {%- set badge_class = 'text-bg-danger' -%}
+    {%- set icon_name = 'exclamation-triangle' -%}
+{%- elif 'заміни' in lower_value or 'уваг' in lower_value -%}
+    {%- set badge_class = 'text-bg-warning' -%}
+    {%- set icon_name = 'exclamation-triangle' -%}
+{%- elif value == 'все добре' or 'Оглянуто' in value or 'Підкормлено' in value or 'Пластини' in value or 'Медозбір' in value or lower_value in ('ok', 'все добре') -%}
+    {%- set badge_class = 'text-bg-success' -%}
+    {%- set icon_name = 'check-circle' -%}
+{%- else -%}
+    {%- set badge_class = 'text-bg-info' -%}
+    {%- set icon_name = 'info-circle' -%}
 {%- endif -%}
-<span class="badge rounded-pill {{ badge_class }}">{{ status }}</span>
+<span class="badge rounded-pill {{ badge_class }} d-inline-flex align-items-center gap-1">{{ icon(icon_name) }}{{ value }}</span>
 {%- endmacro %}
