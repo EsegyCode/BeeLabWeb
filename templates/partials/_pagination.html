@@ -1,0 +1,23 @@
+﻿{% if pagination is defined and pagination is not none and pagination.pages > 1 %}
+<nav aria-label="Сторінки" class="d-flex justify-content-center mt-3">
+    <ul class="pagination pagination-sm mb-0">
+        {% if pagination.has_prev %}
+        <li class="page-item"><a class="page-link" href="{{ pagination.prev_url }}">Попередня</a></li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Попередня</span></li>
+        {% endif %}
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+            <li class="page-item {% if page == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ pagination.page_url(page) }}">{{ page }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+        <li class="page-item"><a class="page-link" href="{{ pagination.next_url }}">Наступна</a></li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Наступна</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

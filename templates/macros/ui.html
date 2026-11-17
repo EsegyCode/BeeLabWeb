@@ -1,0 +1,7 @@
+﻿{% macro badge_status(status) %}
+<span class="badge rounded-pill text-bg-secondary">{{ status }}</span>
+{% endmacro %}
+
+{% macro form_label(field_name, text, required=False) %}
+<label class="form-label fw-semibold" for="{{ field_name }}">{{ text }}{% if required %}<span class="text-danger ms-1" aria-hidden="true">*</span>{% endif %}</label>
+{% endmacro %}

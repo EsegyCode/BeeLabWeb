@@ -1,3 +1,4 @@
+import mimetypes
 import os
 
 from flask import Flask, render_template
@@ -28,6 +29,12 @@ def create_app(config_object=None):
     app = Flask(__name__)
     app.config.from_object(config_object)
 
+    mimetypes.add_type("text/css", ".css")
+    mimetypes.add_type("application/javascript", ".js")
+    mimetypes.add_type("font/woff2", ".woff2")
+    mimetypes.add_type("font/woff", ".woff")
+    mimetypes.add_type("font/ttf", ".ttf")
+
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
     db.init_app(app)
@@ -44,6 +51,8 @@ def create_app(config_object=None):
 
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"
+    login_manager.login_message = "Увійдіть, щоб отримати доступ до цієї сторінки."
+    login_manager.login_message_category = "warning"
     login_manager.init_app(app)
 
     @login_manager.user_loader

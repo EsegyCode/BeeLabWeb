@@ -1,0 +1,15 @@
+﻿<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="confirmModalLabel">{{ confirm_title|default('Підтвердження') }}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+            </div>
+            <div class="modal-body">{{ confirm_text|default('Ви впевнені?') }}</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
+                <button type="button" class="btn btn-danger" id="confirmModalAccept">Підтвердити</button>
+            </div>
+        </div>
+    </div>
+</div>

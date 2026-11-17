@@ -7,9 +7,9 @@ load_dotenv()
 
 BASE_CSP = {
     "default-src": "'self'",
-    "script-src": ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "'unsafe-inline'"],
-    "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
-    "font-src": ["'self'", "data:", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"],
+    "script-src": ["'self'"],
+    "style-src": ["'self'", "'unsafe-inline'"],
+    "font-src": ["'self'", "data:"],
     "img-src": ["'self'", "data:"],
     "connect-src": "'self'",
     "frame-ancestors": "'none'",
