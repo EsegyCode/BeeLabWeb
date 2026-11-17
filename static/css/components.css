@@ -111,3 +111,25 @@ body {
     padding-bottom: 5rem;
   }
 }
+
+.brand-mark {
+  display: inline-flex;
+  color: var(--bl-primary);
+  margin-right: 0.35rem;
+}
+.bottom-nav .icon {
+  font-size: 1.15rem;
+}
+.status-row-danger {
+  box-shadow: inset 4px 0 0 var(--bs-danger);
+}
+.status-row-warning {
+  box-shadow: inset 4px 0 0 var(--bs-warning);
+}
+.status-row-success {
+  box-shadow: inset 4px 0 0 var(--bs-success);
+}
+.status-row-info {
+  box-shadow: inset 4px 0 0 var(--bs-info);
+}
+
