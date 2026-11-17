@@ -1,11 +1,12 @@
 import mimetypes
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
+from markupsafe import Markup
 from flask_login import LoginManager
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from config import DevelopmentConfig, ProductionConfig, TestingConfig
+from config import DevelopmentConfig, ProductionConfig, TestingConfig, get_config
 from extensions import csrf, limiter, scheduler, talisman
 from models import db, User
 
@@ -19,12 +20,7 @@ from core.scheduler_tasks import send_daily_briefing
 
 def create_app(config_object=None):
     if config_object is None:
-        env = os.getenv("FLASK_ENV", "development").lower()
-        config_object = {
-            "development": DevelopmentConfig,
-            "testing": TestingConfig,
-            "production": ProductionConfig,
-        }.get(env, DevelopmentConfig)
+        config_object = get_config()
 
     app = Flask(__name__)
     app.config.from_object(config_object)
@@ -87,6 +83,23 @@ def create_app(config_object=None):
         def scheduled_briefing():
             print("INFO: Запуск планового ранкового звіту...")
             send_daily_briefing(app)
+
+    @app.context_processor
+    def inject_app_meta():
+        def icon(name, cls=""):
+            href = url_for("static", filename="vendor/bootstrap-icons/1.11.3/bootstrap-icons.svg")
+            return Markup(
+                f'<svg class="bi-icon {cls}" width="1em" height="1em" viewBox="0 0 16 16" aria-hidden="true" focusable="false">'
+                f'<use href="{href}#{name}"></use></svg>'
+            )
+
+        return {
+            "APP_NAME": app.config.get("APP_NAME", "BeeLab"),
+            "APP_VERSION": app.config.get("APP_VERSION", "0.1.0"),
+            "SUPPORT_EMAIL": app.config.get("SUPPORT_EMAIL"),
+            "TELEGRAM_BOT_USERNAME": app.config.get("TELEGRAM_BOT_USERNAME"),
+            "icon": icon,
+        }
 
     return app
 
