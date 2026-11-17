@@ -18,7 +18,7 @@ auth_bp = Blueprint('auth', __name__)
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
-@limiter.limit("5 per minute")
+@limiter.limit("5 per minute", methods=["POST"])
 def login():
     if request.method == 'POST':
         try:
@@ -43,7 +43,7 @@ def login():
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
-@limiter.limit("3 per minute")
+@limiter.limit("3 per minute", methods=["POST"])
 def register():
     if request.method == 'POST':
         try:
