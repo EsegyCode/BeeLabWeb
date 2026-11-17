@@ -1,27 +1,42 @@
 {% extends 'base.html' %}
+
+{% block title %}Вхід — BeeLab{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-4">
-        <div class="card shadow border-0">
-            <div class="card-body p-4">
-                <h3 class="text-center mb-4">🔑 Вхід у BeeLab</h3>
-                <form method="POST">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Логін</label>
-                        <input type="text" name="username" class="form-control" placeholder="Наприклад: Mykola_K" required>
+<section class="auth-shell py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+            <div class="card auth-card border-0">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 fw-bold mb-1">Вхід у BeeLab</h1>
+                        <p class="text-muted small mb-0">Керуй пасікою з будь-якого пристрою.</p>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Пароль</label>
-                        <input type="password" name="password" class="form-control" required>
+                    <form method="POST" novalidate>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="username">Логін</label>
+                            <input id="username" type="text" name="username" class="form-control form-control-lg" placeholder="Mykola_K" autocomplete="username" required autofocus>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="password">Пароль</label>
+                            <div class="input-group input-group-lg">
+                                <input id="password" type="password" name="password" class="form-control" placeholder="Ваш пароль" autocomplete="current-password" required>
+                                <button class="btn btn-outline-secondary" type="button" data-password-toggle="#password" aria-pressed="false">Показати</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-orange w-100 btn-lg">Увійти</button>
+                    </form>
+                    <div class="text-center mt-4">
+                        <small class="text-muted">Немає акаунта? <a href="{{ url_for('auth.register') }}" class="fw-semibold text-decoration-none">Зареєструватися</a></small>
                     </div>
-                    <button type="submit" class="btn btn-warning w-100 py-2 fw-bold shadow-sm">Увійти</button>
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
-                <div class="text-center mt-3">
-                    <small class="text-muted">Немає акаунту? <a href="{{ url_for('auth.register') }}" class="text-decoration-none fw-bold text-warning">Зареєструватися</a></small>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+{% endblock %}
+
+{% block page_js %}
+<script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
 {% endblock %}

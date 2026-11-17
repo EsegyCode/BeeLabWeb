@@ -1,37 +1,47 @@
 {% extends 'base.html' %}
+
+{% block title %}Реєстрація — BeeLab{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-4">
-        <div class="card shadow border-0">
-            <div class="card-body p-4">
-                <h3 class="text-center mb-4">🐝 Реєстрація пасічника</h3>
-                <form method="POST">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Логін</label>
-                        <input type="text" name="username" class="form-control" placeholder="Наприклад: Mykola_K" required>
-                        <div class="form-text">Використовуйте цей логін для входу в систему.</div>
+<section class="auth-shell py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-7 col-lg-6 col-xl-5">
+            <div class="card auth-card border-0">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 fw-bold mb-1">Створити акаунт</h1>
+                        <p class="text-muted small mb-0">Розпочни облік пасіки за 2 хвилини.</p>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Контактні дані</label>
-                        <input type="text" name="contact" class="form-control" placeholder="Телефон або @Telegram">
-                        <div class="form-text">Для відновлення доступу адміністратором.</div>
+                    <form method="POST" novalidate>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="username">Логін</label>
+                            <input id="username" type="text" name="username" class="form-control" placeholder="Mykola_K" autocomplete="username" required autofocus>
+                            <div class="form-text">Латиниця, цифри, крапка, дефіс, підкреслення; мінімум 3 символи.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="contact">Контактні дані</label>
+                            <input id="contact" type="text" name="contact" class="form-control" placeholder="Телефон або @Telegram" autocomplete="tel">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold" for="password">Пароль</label>
+                            <div class="input-group">
+                                <input id="password" type="password" name="password" class="form-control" placeholder="Мінімум 6 символів" autocomplete="new-password" required>
+                                <button class="btn btn-outline-secondary" type="button" data-password-toggle="#password" aria-pressed="false">Показати</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-orange w-100 btn-lg">Створити акаунт</button>
+                    </form>
+                    <div class="text-center mt-4">
+                        <small class="text-muted">Вже є акаунт? <a href="{{ url_for('auth.login') }}" class="fw-semibold text-decoration-none">Увійти</a></small>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Пароль</label>
-                        <input type="password" name="password" class="form-control" placeholder="Мінімум 6 символів" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-warning w-100 py-2 fw-bold shadow-sm">Створити акаунт</button>
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-</form>
-
-                <div class="text-center mt-3">
-                    <small class="text-muted">Вже є акаунт? <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-bold text-warning">Увійти</a></small>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+{% endblock %}
+
+{% block page_js %}
+<script defer src="{{ url_for('static', filename='js/auth.js') }}"></script>
 {% endblock %}
