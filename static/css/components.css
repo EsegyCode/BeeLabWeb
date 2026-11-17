@@ -1,0 +1,55 @@
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background: rgba(255, 248, 231, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--bee-border);
+}
+
+[data-bs-theme="dark"] .app-header {
+  background: rgba(30, 22, 15, 0.92);
+}
+
+.app-header .navbar-brand {
+  font-weight: 700;
+  color: var(--bee-text);
+}
+
+.brand-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--bee-accent);
+  margin-right: 0.4rem;
+}
+
+.app-nav .nav-link {
+  color: var(--bee-text);
+  font-weight: 600;
+}
+
+.app-nav .nav-link.active,
+.app-nav .nav-link[aria-current="page"] {
+  color: var(--bee-accent-dark);
+}
+
+.btn-orange {
+  background: var(--bee-accent);
+  border-color: var(--bee-accent);
+  color: #1f1300;
+}
+
+.btn-orange:hover {
+  background: var(--bee-accent-dark);
+  border-color: var(--bee-accent-dark);
+  color: #1f1300;
+}
+
+.toast-region {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 1080;
+}

@@ -1,0 +1,77 @@
+:root {
+  --bee-bg: #FFF8E7;
+  --bee-surface: #FFFFFF;
+  --bee-text: #3B2A1A;
+  --bee-muted: #6B5A45;
+  --bee-border: rgba(59, 42, 26, 0.12);
+  --bee-shadow: 0 0.5rem 1.5rem rgba(59, 42, 26, 0.08);
+  --bee-accent: #F2A900;
+  --bee-accent-dark: #E09100;
+  --bee-success: #4C8C4A;
+  --bee-danger: #C93A2B;
+  --bee-radius: 1rem;
+  --bee-tap: 44px;
+  --bs-body-font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Liberation Sans", sans-serif;
+  --bs-body-color: var(--bee-text);
+  --bs-body-bg: var(--bee-bg);
+  --bs-border-color: var(--bee-border);
+  --bs-primary: #F2A900;
+  --bs-primary-rgb: 242, 169, 0;
+  --bs-link-color: var(--bee-accent-dark);
+  --bs-link-hover-color: #B87500;
+  --bs-success: var(--bee-success);
+  --bs-danger: var(--bee-danger);
+  --bs-border-radius: var(--bee-radius);
+}
+
+[data-bs-theme="dark"] {
+  --bee-bg: #1E160F;
+  --bee-surface: #2A1F15;
+  --bee-text: #F5E9D8;
+  --bee-muted: #CDB9A1;
+  --bee-border: rgba(245, 233, 216, 0.12);
+  --bee-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.35);
+  --bs-body-color: var(--bee-text);
+  --bs-body-bg: var(--bee-bg);
+  --bs-border-color: var(--bee-border);
+}
+
+/* Відступи/тап-зони */
+.btn, .form-control, .form-select, .nav-link {
+  min-height: var(--bee-tap);
+}
+
+.btn-sm {
+  min-height: 36px;
+}
+
+/* Доступність */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  padding: .5rem 1rem;
+  background: var(--bee-surface);
+  color: var(--bee-text);
+  border: 1px solid var(--bee-border);
+  border-radius: .5rem;
+  z-index: 1000;
+}
+
+main#content {
+  scroll-margin-top: 5rem;
+}
+
+/* Флешки */
+.flash-stack [role="alert"] {
+  border-left: 4px solid var(--bee-accent);
+}

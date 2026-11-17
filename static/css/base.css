@@ -1,0 +1,55 @@
+html, body {
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  font-family: var(--bs-body-font-family);
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1 0 auto;
+}
+
+.app-footer {
+  flex-shrink: 0;
+  margin-top: 3rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--bee-border);
+  color: var(--bee-muted);
+}
+
+.card {
+  background-color: var(--bee-surface);
+  border: 1px solid var(--bee-border);
+  box-shadow: var(--bee-shadow);
+}
+
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--bee-muted);
+}
+
+.empty-state .empty-state-icon {
+  font-size: 2.5rem;
+  color: var(--bee-accent);
+  margin-bottom: 1rem;
+}
+
+.table-responsive {
+  border-radius: var(--bee-radius);
+}
+
+@media (max-width: 767.98px) {
+  .table-responsive table {
+    display: block;
+  }
+}

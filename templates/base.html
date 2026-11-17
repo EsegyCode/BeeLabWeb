@@ -1,219 +1,85 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BeeLab Management — Цифрова пасіка</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            --bee-bg: #F8F9FA;
-            --bee-accent: #FD7E14;
-            --bee-accent-dark: #DC6502;
-            --bee-dark: #212529;
-            --bee-muted: #6C757D;
-            --bee-soft: #E9ECEF;
-            --bee-border: rgba(33, 37, 41, 0.08);
-            --bee-shadow: 0 0.5rem 1.5rem rgba(33, 37, 41, 0.06);
-            --bs-primary: var(--bee-accent);
-            --bs-primary-rgb: 253, 126, 20;
-            --bs-body-color: var(--bee-dark);
-            --bs-body-bg: var(--bee-bg);
-            --bs-link-color: var(--bee-accent);
-            --bs-link-hover-color: var(--bee-accent-dark);
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            font-family: 'Inter', sans-serif;
-            color: var(--bee-dark);
-            background: var(--bee-bg);
-        }
-
-        .navbar {
-            padding: 0.85rem 0;
-            background: rgba(255, 255, 255, 0.96) !important;
-            border-bottom: 1px solid var(--bee-border);
-            backdrop-filter: blur(10px);
-        }
-
-        .navbar-brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--bee-dark) !important;
-            letter-spacing: 0;
-        }
-
-        .navbar-brand i,
-        .navbar .nav-link i {
-            color: var(--bee-accent) !important;
-        }
-
-        .navbar .nav-link {
-            color: var(--bee-dark) !important;
-            font-weight: 600;
-            border-radius: 0.75rem;
-            padding: 0.65rem 0.85rem;
-            transition: color 0.2s ease, background-color 0.2s ease;
-        }
-
-        .navbar .nav-link:hover,
-        .navbar .nav-link:focus,
-        .navbar .nav-link.active {
-            color: var(--bee-accent) !important;
-            background-color: rgba(253, 126, 20, 0.1);
-        }
-
-        .main-container {
-            flex: 1;
-            padding-top: 1.5rem;
-            padding-bottom: 2.5rem;
-        }
-
-        .card {
-            border: 1px solid var(--bee-border);
-            border-radius: 1rem;
-            background-color: #fff;
-            box-shadow: var(--bee-shadow);
-        }
-
-        .card-header {
-            border-bottom: 1px solid var(--bee-border);
-            border-radius: 1rem 1rem 0 0 !important;
-            background-color: #fff;
-        }
-
-        .btn {
-            border-radius: 0.75rem;
-            font-weight: 600;
-            padding: 0.6rem 1rem;
-        }
-
-        .btn-sm {
-            border-radius: 0.65rem;
-            padding: 0.4rem 0.75rem;
-        }
-
-        .btn-orange,
-        .btn-primary {
-            --bs-btn-color: #fff;
-            --bs-btn-bg: var(--bee-accent);
-            --bs-btn-border-color: var(--bee-accent);
-            --bs-btn-hover-color: #fff;
-            --bs-btn-hover-bg: var(--bee-accent-dark);
-            --bs-btn-hover-border-color: var(--bee-accent-dark);
-            --bs-btn-focus-shadow-rgb: 253, 126, 20;
-            --bs-btn-active-color: #fff;
-            --bs-btn-active-bg: var(--bee-accent-dark);
-            --bs-btn-active-border-color: var(--bee-accent-dark);
-            --bs-btn-disabled-color: #fff;
-            --bs-btn-disabled-bg: var(--bee-accent);
-            --bs-btn-disabled-border-color: var(--bee-accent);
-        }
-
-        .btn-outline-primary,
-        .btn-outline-orange {
-            --bs-btn-color: var(--bee-accent);
-            --bs-btn-border-color: var(--bee-accent);
-            --bs-btn-hover-color: #fff;
-            --bs-btn-hover-bg: var(--bee-accent);
-            --bs-btn-hover-border-color: var(--bee-accent);
-            --bs-btn-focus-shadow-rgb: 253, 126, 20;
-            --bs-btn-active-color: #fff;
-            --bs-btn-active-bg: var(--bee-accent-dark);
-            --bs-btn-active-border-color: var(--bee-accent-dark);
-        }
-
-        .text-orange {
-            color: var(--bee-accent) !important;
-        }
-
-        .bg-soft {
-            background-color: var(--bee-soft) !important;
-        }
-
-        .table {
-            --bs-table-color: var(--bee-dark);
-            --bs-table-hover-bg: rgba(253, 126, 20, 0.06);
-        }
-
-        .table-light {
-            --bs-table-bg: var(--bee-soft);
-            --bs-table-color: var(--bee-dark);
-            border-color: var(--bee-border);
-        }
-
-        .badge {
-            font-weight: 600;
-            letter-spacing: 0;
-        }
-
-        .alert {
-            border: 0;
-            border-radius: 1rem;
-            box-shadow: var(--bee-shadow);
-        }
-
-        footer {
-            color: var(--bee-muted);
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{% block title %}BeeLab — Цифрова пасіка{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Органайзер для пасічників: вулики, огляди, календар завдань, фінанси та Telegram-нагадування.{% endblock %}">
+    <meta name="theme-color" content="#F2A900">
+    <meta name="color-scheme" content="light dark">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    {% block page_css %}{% endblock %}
 </head>
 <body>
+    <a class="skip-link" href="#content">Перейти до змісту</a>
 
-    <nav class="navbar navbar-expand-lg sticky-top shadow-sm mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('hives.index') }}">
-                <i class="fas fa-bee"></i>BeeLab
+    <header class="app-header">
+        <nav class="navbar navbar-expand-lg container py-2" aria-label="Головна навігація">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('hives.index') }}">
+                <span class="brand-dot" aria-hidden="true"></span>BeeLab
             </a>
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Перемкнути навігацію">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Відкрити меню">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNavbar">
-                <div class="navbar-nav ms-auto gap-lg-2 pt-3 pt-lg-0">
-                    <a class="nav-link" href="{{ url_for('hives.calendar') }}">
-                        <i class="fas fa-calendar-alt me-1"></i> Календар робіт
-                    </a>
-                    <a class="nav-link" href="{{ url_for('finance.finance') }}">
-                        <i class="fas fa-wallet me-1"></i> Фінанси
-                    </a>
-                    <a class="nav-link" href="{{ url_for('hives.instructions') }}">
-                        <i class="fas fa-book me-1"></i> Інструкція з імпорту
-                    </a>
-                </div>
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('hives.index') }}">Вулики</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('hives.calendar') }}">Календар</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('finance.finance') }}">Фінанси</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('analytics.analytics') }}">Аналітика</a></li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-sm btn-outline-secondary ms-lg-2" data-theme-toggle aria-pressed="false" aria-label="Перемкнути тему">Тема</button>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ current_user.username }}</a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">Профіль</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('analytics.analytics') }}">Експорт</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Вийти</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('hives.instructions') }}">Як це працює</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-secondary btn-sm ms-lg-2" href="{{ url_for('auth.login') }}">Увійти</a></li>
+                    <li class="nav-item"><a class="btn btn-orange btn-sm" href="{{ url_for('auth.register') }}">Реєстрація</a></li>
+                    {% endif %}
+                </ul>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <div class="container main-container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+    <div class="app-shell">
+        <main id="content" class="app-main container py-4" tabindex="-1">
+            <div class="flash-stack mb-3" aria-live="polite">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрити"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            {% block content %}{% endblock %}
+        </main>
 
-        {% block content %}{% endblock %}
+        <footer class="app-footer">
+            <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+                <span>© BeeLab. Органайзер бджоляра.</span>
+                <span class="text-muted small">Статус: бета</span>
+            </div>
+        </footer>
     </div>
 
-    <footer class="py-4 mt-5">
-        <div class="container">
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    {% block page_js %}{% endblock %}
 </body>
 </html>
