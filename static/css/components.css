@@ -47,6 +47,21 @@
   color: #1f1300;
 }
 
+.btn-primary,
+.btn-primary:focus {
+  background-color: var(--bl-primary);
+  border-color: var(--bl-primary);
+  color: var(--bl-primary-text);
+  font-weight: 700;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+  background-color: var(--bl-primary-hover);
+  border-color: var(--bl-primary-hover);
+  color: var(--bl-primary-text);
+}
+
 .toast-region {
   position: fixed;
   bottom: 1rem;
