@@ -1,0 +1,16 @@
+{
+  "name": "BeeLab — Облік пасіки",
+  "short_name": "BeeLab",
+  "description": "Веб-застосунок для обліку пасіки, вуликів, оглядів, фінансів та завдань",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8E7",
+  "theme_color": "#5C3317",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

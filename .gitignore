@@ -18,3 +18,9 @@ dist/
 build/
 .coverage
 htmlcov/
+
+# Node / TypeScript / Cloudflare
+node_modules/
+.dev.vars
+*.local
+.wrangler/

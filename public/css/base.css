@@ -1,0 +1,294 @@
+/* =============================================================
+   BeeLab — Base Styles
+   Depends on: tokens.css (must be loaded first)
+   ============================================================= */
+
+/* -----------------------------------------------------------
+   1. Accessibility helpers
+   ----------------------------------------------------------- */
+
+/* Skip-to-content link — hidden until focused by keyboard */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 10000;
+  background: var(--bee-orange);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 var(--bee-radius) var(--bee-radius);
+  font-weight: 700;
+  text-decoration: none;
+  transition: top 0.15s;
+}
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--bee-brown);
+  outline-offset: 2px;
+}
+
+/* Global focus outline — orange ring for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--bee-orange);
+  outline-offset: 3px;
+}
+
+/* -----------------------------------------------------------
+   2. Base reset & html / body
+   ----------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;          /* base for rem calculations */
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--bee-font);
+  background-color: var(--bee-cream);
+  color: var(--bee-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* -----------------------------------------------------------
+   3. App shell — full-height flex column
+   ----------------------------------------------------------- */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* -----------------------------------------------------------
+   4. Header / Navbar
+   ----------------------------------------------------------- */
+
+.app-header {
+  background-color: var(--bee-brown);  /* #5C3317 — dark brown */
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(92, 51, 23, 0.25);
+  /* Keep the header above sticky content */
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+/* Brand name & hive SVG icon */
+.navbar-brand {
+  color: var(--bee-orange) !important;
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+.navbar-brand:hover,
+.navbar-brand:focus {
+  color: var(--bee-orange-hover) !important;
+}
+
+/* Nav links — white by default */
+.app-header .nav-link,
+.app-header .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.90) !important;
+  font-weight: 500;
+  padding-block: 0.4rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.app-header .nav-link:hover,
+.app-header .navbar-nav .nav-link:hover {
+  color: #ffffff !important;
+  border-bottom-color: var(--bee-orange);
+}
+
+/* Active nav link — orange text + orange underline */
+.app-header .nav-link.active,
+.app-header .navbar-nav .nav-link.active {
+  color: var(--bee-orange) !important;
+  border-bottom-color: var(--bee-orange);
+  font-weight: 700;
+}
+
+/* -----------------------------------------------------------
+   5. Main content area
+   ----------------------------------------------------------- */
+
+.app-main {
+  flex: 1;
+  padding: 1.5rem 1rem;
+}
+
+/* -----------------------------------------------------------
+   6. Footer
+   ----------------------------------------------------------- */
+
+.app-footer {
+  background-color: var(--bee-cream);
+  border-top: 1px solid var(--bee-border);
+  color: var(--bee-muted);
+  font-size: 0.8rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+/* -----------------------------------------------------------
+   7. Bottom navigation bar (mobile)
+   ----------------------------------------------------------- */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1040;
+  background-color: var(--bee-brown);
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+  /* Only visible on small screens — toggled via utility class */
+}
+
+.bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  min-height: var(--bee-tap);
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.70);
+  text-decoration: none;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  transition: color 0.15s;
+  padding: 0.25rem 0;
+}
+.bottom-nav__item:hover,
+.bottom-nav__item.active {
+  color: var(--bee-orange);
+}
+.bottom-nav__item .icon {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+/* -----------------------------------------------------------
+   8. SVG icon helper
+   ----------------------------------------------------------- */
+
+.icon {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  fill: currentColor;
+  vertical-align: -0.125em;  /* optical alignment with text */
+  flex-shrink: 0;
+}
+
+/* -----------------------------------------------------------
+   9. Card (generic)
+   ----------------------------------------------------------- */
+
+.card {
+  background-color: var(--bee-white);
+  border: 1px solid var(--bee-border);
+  border-radius: var(--bee-radius);
+  box-shadow: var(--bee-shadow);
+}
+
+/* -----------------------------------------------------------
+   10. Tables
+   ----------------------------------------------------------- */
+
+/* Generic hover on Bootstrap tables */
+.table-hover tbody tr:hover {
+  background-color: var(--bee-cream-2);
+}
+
+/* Status-row left-border indicators */
+.status-row-ok {
+  border-left: 3px solid var(--bee-status-ok);
+}
+.status-row-warn {
+  border-left: 3px solid var(--bee-status-warn);
+}
+.status-row-danger {
+  border-left: 3px solid var(--bee-status-danger);
+}
+.status-row-critical {
+  border-left: 3px solid var(--bee-status-critical);
+}
+
+/* -----------------------------------------------------------
+   11. Empty state placeholder
+   ----------------------------------------------------------- */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--bee-muted);
+}
+.empty-state .icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  opacity: 0.45;
+  margin-bottom: 1rem;
+}
+.empty-state__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--bee-brown-mid);
+  margin-bottom: 0.4rem;
+}
+.empty-state__text {
+  font-size: 0.9rem;
+}
+
+/* -----------------------------------------------------------
+   12. Toast notification region
+   ----------------------------------------------------------- */
+
+.toast-region {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 1090;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: min(calc(100vw - 2.5rem), 380px);
+  pointer-events: none;   /* only children receive pointer events */
+}
+.toast-region > * {
+  pointer-events: auto;
+}
+
+/* -----------------------------------------------------------
+   13. Responsive spacers
+   ----------------------------------------------------------- */
+
+/* Reserve space for the fixed bottom-nav on mobile */
+@media (max-width: 991.98px) {
+  .app-main {
+    padding-bottom: 5rem;
+  }
+}
