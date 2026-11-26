@@ -20,7 +20,7 @@ Live URL: TODO (owner). Repository status: active TypeScript/Cloudflare implemen
 | Area | Technology | Notes |
 | --- | --- | --- |
 | Cloud app | Hono 4.6, TypeScript | `src/index.ts` and `functions/[[route]].ts` |
-| Cloud runtime | Cloudflare Pages, Worker, D1, KV, Cron Triggers | Bindings in `src/db/schema.ts` and `wrangler.toml` |
+| Cloud runtime | Cloudflare Worker (Wrangler), D1, KV, Cron Triggers | Bindings in `src/db/schema.ts` and `wrangler.jsonc` |
 | Validation/build | `tsc --noEmit` | `npm run build` |
 | Legacy app | Flask, SQLAlchemy, MySQL, Jinja-style templates | Root Python files and `templates/` |
 | Tools | Docker Compose, pytest | `requirements.txt`, `tests/` |
@@ -33,8 +33,8 @@ npm run build
 npm run dev
 ```
 
-`npm run dev` runs `wrangler pages dev --compatibility-date=2024-09-23 .`.
-Production deploy: `npm run deploy` (`wrangler pages deploy .`).
+`npm run dev` runs `wrangler dev`.
+Production deploy: `npm run deploy` (`wrangler deploy`, same as the Cloudflare build command).
 
 Database migrations:
 
@@ -84,7 +84,7 @@ BeeLabWeb/
 
 ## Deployment notes
 
-Cloudflare bindings contain placeholder database IDs in `wrangler.toml`, so create D1/KV resources and replace them before release. Details in [Deployment](docs/DEPLOYMENT.md).
+Cloudflare Worker uses `wrangler.jsonc` with placeholder D1/KV IDs; create resources and replace IDs before release. Details in [Deployment](docs/DEPLOYMENT.md).
 
 ## Notes
 

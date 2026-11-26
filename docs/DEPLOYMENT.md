@@ -9,11 +9,11 @@ npm run build
 npm run preview # not provided by package.json; use npm run dev instead
 ```
 
-The only script entry point for build is `npm run build` (`tsc --noEmit`). Local dev uses `npm run dev` (`wrangler pages dev --compatibility-date=2024-09-23 .`).
+The only script entry point for build is `npm run build` (`tsc --noEmit`). Local dev uses `npm run dev` (`wrangler dev`).
 
 ## Hosting and output
 
-Hosting is Cloudflare Pages, configured by `wrangler.toml`. `name` is `beelab`, `pages_build_output_dir` is `public`, and all non-static requests are forwarded to `src` through `functions/[[route]].ts`. Cron triggers are `0 6 * * *` and `0 8 * * *`.
+Hosting is a Cloudflare Worker with static assets, configured by `wrangler.jsonc`. Worker name is `beelabweb`, entry point is `src/index.ts`, static assets directory is `./public` with binding `ASSETS`. Cron triggers are `0 6 * * *` and `0 8 * * *`. `functions/[[route]].ts` is legacy Pages routing and is not used by the Worker entry.
 
 ## Database and KV
 
@@ -22,7 +22,7 @@ npm run db:migrate:local
 npm run db:migrate:remote
 ```
 
-`wrangler.toml` contains placeholder IDs for `beelab-db` (D1) and `KV`. Create resources and replace `database_id` and `id` before deploying. Binding names must remain `DB` and `KV`.
+`wrangler.jsonc` contains placeholder IDs for `beelab-db` (D1) and `KV`. Create resources and replace `database_id` and `id` before deploying. Binding names must remain `DB` and `KV`.
 
 ## Environment variables
 

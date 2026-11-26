@@ -1,0 +1,8 @@
+SECRET_KEY=change-me
+WEATHER_API_KEY=change-me
+TELEGRAM_BOT_TOKEN=change-me
+TELEGRAM_BOT_USERNAME=beelab_bot
+APP_NAME=BeeLab
+APP_VERSION=2.0.0
+APP_URL=http://localhost:8787
+</content>
